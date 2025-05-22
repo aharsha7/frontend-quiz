@@ -1,21 +1,25 @@
-import axios from "axios";
+// Add this function to your resultService.js file
 
-const API_URL = "http://localhost:5000/api/result";
+import axios from 'axios';
 
-export const submitResult = async (categoryId, score) => {
-  const token = localStorage.getItem("token");
-  const res = await axios.post(
-    `${API_URL}/submit`,
-    { categoryId, score },
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  return res.data;
-};
+const API_BASE_URL = 'http://localhost:5000/api';
 
-export const getHistory = async () => {
-  const token = localStorage.getItem("token");
-  const res = await axios.get(`${API_URL}/history`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.data;
+// Function to fetch quiz history
+export const fetchQuizHistory = async () => {
+  try {
+    const token = localStorage.getItem("userInfo")
+      ? JSON.parse(localStorage.getItem("userInfo")).token
+      : null;
+
+    const response = await axios.get(`${API_BASE_URL}/result/history`, {
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching quiz history:', error);
+    throw error;
+  }
 };

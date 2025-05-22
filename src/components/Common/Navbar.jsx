@@ -1,15 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
-  const user = JSON.parse(localStorage.getItem("userInfo"));
+  useEffect(() => {
+    const checkUserInfo = () => {
+      const userInfo = localStorage.getItem("userInfo");
+      if (userInfo) {
+        setUser(JSON.parse(userInfo));
+      } else {
+        setUser(null);
+      }
+    };
+
+    // Check initially
+    checkUserInfo();
+
+    // Check periodically for changes
+    const interval = setInterval(checkUserInfo, 100);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.removeItem("userInfo"); // Fixed: was "user", now matches the key
+    setUser(null); // Clear user state to trigger re-render
     navigate("/login");
   };
 
@@ -22,10 +41,10 @@ const Navbar = () => {
         Quiz App
       </h1>
       {user?.role === "admin" && (
-        <Link to="/admin/dashboard">Admin Dashboard</Link>
+        <Link to="/admin/dashboard">Home</Link>
       )}
       {user?.role === "user" && (
-        <Link to="/quiz/dashboard">Quiz Dashboard</Link>
+        <Link to="/quiz/dashboard">Home</Link>
       )}
       <div className="flex items-center gap-4">
         {user && (

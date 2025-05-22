@@ -1,70 +1,62 @@
-// services/authService.js
 import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api/auth';
 
-// Configure axios with interceptors for auth
+// Axios instance
 const api = axios.create({
   baseURL: API_URL,
 });
 
-// Add an interceptor to automatically add the token to requests
+// Request interceptor to attach token
 api.interceptors.request.use(
   (config) => {
-    // Get token from localStorage
     const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-    if (userInfo && userInfo.token) {
+    if (userInfo?.token) {
       config.headers.Authorization = `Bearer ${userInfo.token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
+// Login
 export const loginUser = async (credentials) => {
   try {
-    const res = await api.post('/login', credentials);
-    const data = res.data;
-    
-    if (data && data.token) {
-      // Store the entire user object, including the token
+    const { data } = await api.post('/login', credentials);
+    if (data?.token) {
       localStorage.setItem('userInfo', JSON.stringify(data));
-      console.log('Token stored in localStorage:', data.token.substring(0, 10) + '...');
     } else {
-      console.error('No token received from server');
+      console.error('No token received.');
     }
-    
     return data;
   } catch (error) {
-    console.error('Login error:', error.response?.data?.message || error.message);
+    console.error('Login failed:', error.response?.data?.message || error.message);
     throw error;
   }
 };
 
+// Register
 export const registerUser = async (userData) => {
   try {
-    const res = await api.post('/register', userData);
-    const data = res.data;
-    
-    if (data && data.token) {
-      // Store the entire user object, including the token
+    const { data } = await api.post('/register', userData);
+    if (data?.token) {
       localStorage.setItem('userInfo', JSON.stringify(data));
+      console.log('Registered and token stored.');
     }
-    
     return data;
   } catch (error) {
-    console.error('Registration error:', error.response?.data?.message || error.message);
+    console.error('Registration failed:', error.response?.data?.message || error.message);
     throw error;
   }
 };
 
+// Logout
 export const logoutUser = () => {
   localStorage.removeItem('userInfo');
-  console.log('User logged out, storage cleared');
+  console.log('Logged out and storage cleared.');
 };
 
+// Get current user
 export const getCurrentUser = () => {
   try {
     const userInfo = localStorage.getItem('userInfo');
@@ -75,13 +67,11 @@ export const getCurrentUser = () => {
   }
 };
 
+// Get auth headers for manual requests
 export const getAuthHeader = () => {
   try {
     const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-    if (userInfo && userInfo.token) {
-      return { Authorization: `Bearer ${userInfo.token}` };
-    }
-    return {};
+    return userInfo?.token ? { Authorization: `Bearer ${userInfo.token}` } : {};
   } catch (error) {
     console.error('Error getting auth header:', error);
     return {};

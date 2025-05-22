@@ -1,117 +1,144 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 const UploadQuestions = () => {
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [categoryName, setCategoryName] = useState('');
+  const [timer, setTimer] = useState('');  // New state for timer
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const fetchCategories = async () => {
-    try {
-      // Update the API endpoint to use the correct path
-      // In development with Vite, API calls might need to use a full URL or proxy
-      const response = await axios.get('http://localhost:5000/api/quiz/categories', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      
-      // Check if response has expected data structure
-      const data = response.data;
-      
-      // Make sure categories is an array before setting state
-      if (Array.isArray(data)) {
-        setCategories(data);
-      } else if (data && typeof data === 'object' && Array.isArray(data.categories)) {
-        // If the API returns { categories: [...] }
-        setCategories(data.categories);
-      } else {
-        console.error('API returned invalid data format:', data);
-        // For debugging - show the first 100 chars of response if it's string
-        if (typeof data === 'string') {
-          console.log('Response preview:', data.substring(0, 100));
-        }
-        setCategories([]); // Set to empty array as fallback
-      }
-    } catch (error) {
-      console.error('Failed to fetch categories:', error);
-      if (error.response) {
-        console.log('Error response:', error.response.status, error.response.statusText);
-      }
-      setCategories([]); // Set to empty array on error
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
   const handleUpload = async (e) => {
     e.preventDefault();
-    if (!selectedCategory || !file) {
-      return setMessage('Please select a category and a file.');
+    setMessage('');
+
+    if (!categoryName.trim() || !file || !timer.trim()) {
+      return setMessage('Please enter a category name, timer, and select a CSV file.');
+    }
+
+    // Validate timer as a positive number
+    const timerNum = Number(timer);
+    if (isNaN(timerNum) || timerNum <= 0) {
+      return setMessage('Timer must be a positive number (in minutes).');
+    }
+
+    let token = null;
+    try {
+      const userInfo = localStorage.getItem('userInfo');
+      if (userInfo) {
+        const user = JSON.parse(userInfo);
+        token = user.token;
+      }
+    } catch (error) {
+      console.error('Error parsing userInfo:', error);
+    }
+
+    if (!token) {
+      return setMessage('❌ Please log in to upload questions.');
     }
 
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('category', categoryName.trim());
+    formData.append('timer', timerNum); // Append timer to form data
 
     try {
       setLoading(true);
-      const { data } = await axios.post(`/api/quiz/upload/${selectedCategory}`, formData, {
+      const { data } = await axios.post(`http://localhost:5000/api/quiz/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       setMessage(`✅ ${data.message} (${data.count} questions)`);
+      setCategoryName('');
+      setTimer(''); // Reset timer input
+      setFile(null);
+      const fileInput = document.getElementById('file');
+      if (fileInput) fileInput.value = '';
     } catch (error) {
-      setMessage(`❌ ${error.response?.data?.message || 'Upload failed'}`);
+      console.error('Upload error:', error);
+      if (error.response?.status === 401) {
+        setMessage('❌ Authentication failed. Please log in again.');
+      } else {
+        setMessage(`❌ ${error.response?.data?.message || 'Upload failed'}`);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4 border rounded-xl shadow-md bg-white">
-      <h2 className="text-2xl font-bold mb-4">Upload Quiz Questions (CSV)</h2>
+    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Upload Quiz Questions</h2>
       
       <form onSubmit={handleUpload} className="space-y-4">
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="w-full border rounded p-2"
-        >
-          <option value="">-- Select Category --</option>
-          {Array.isArray(categories) && categories.map((cat) => (
-            <option key={cat._id} value={cat._id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
+        <div>
+          <label htmlFor="categoryName" className="block text-sm font-medium text-gray-700 mb-2">
+            Category Name
+          </label>
+          <input
+            type="text"
+            id="categoryName"
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+            placeholder="Enter category name"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            disabled={loading}
+          />
+        </div>
 
-        <input
-          type="file"
-          accept=".csv"
-          onChange={(e) => setFile(e.target.files[0])}
-          className="w-full p-2 border rounded"
-        />
+        <div>
+          <label htmlFor="timer" className="block text-sm font-medium text-gray-700 mb-2">
+            Timer (in minutes)
+          </label>
+          <input
+            type="number"
+            id="timer"
+            value={timer}
+            onChange={(e) => setTimer(e.target.value)}
+            placeholder="Enter timer duration"
+            min="1"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            disabled={loading}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-2">
+            CSV File
+          </label>
+          <input
+            type="file"
+            id="file"
+            accept=".csv"
+            onChange={(e) => setFile(e.target.files[0])}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            disabled={loading}
+          />
+          <p className="mt-1 text-xs text-gray-500">Upload a CSV file with your quiz questions</p>
+        </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+          className={`w-full py-2 px-4 rounded-md font-medium text-white transition duration-200 ${
+            loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+          }`}
         >
-          {loading ? 'Uploading...' : 'Upload CSV'}
+          {loading ? 'Uploading...' : 'Upload Questions'}
         </button>
-
-        {message && (
-          <p className="mt-2 text-sm text-gray-700">
-            {message}
-          </p>
-        )}
       </form>
+
+      {message && (
+        <div className={`mt-4 p-3 rounded-md border ${
+          message.includes('✅') 
+            ? 'bg-green-50 text-green-700 border-green-200' 
+            : 'bg-red-50 text-red-700 border-red-200'
+        }`}>
+          {message}
+        </div>
+      )}
     </div>
   );
 };

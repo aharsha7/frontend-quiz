@@ -7,14 +7,14 @@ import PrivateRoute from "./components/Common/PrivateRoute";
 import AdminDashboard from './pages/AdminDashboard';
 import AdminUploadPage from './pages/AdminUploadPage';
 import UserDashboard from "./pages/UserDashboard";
-
+import QuizQuestions from './components/Quiz/QuizQuestions';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import Quiz from './pages/Quiz';
-import ResultPage from './pages/ResultPage';
 import HistoryPage from './pages/HistoryPage';
+import QuizResult from './components/Quiz/QuizResult';
+import QuizHistory from "./components/Quiz/QuizHistory";
 
 function App() {
   return (
@@ -29,11 +29,10 @@ function App() {
           <Route path="/admin" element={<ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>}/>
           <Route path="/admin/dashboard" element={<PrivateRoute requiredRole="admin"><AdminDashboard /></PrivateRoute>} />
           <Route path="/quiz/dashboard" element={<PrivateRoute requiredRole="user"><UserDashboard /></PrivateRoute>}/>
-          
-
           <Route path="/admin/upload-questions" element={<ProtectedRoute adminOnly><AdminUploadPage /></ProtectedRoute>}/>
-          <Route path="/quiz/:id" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
-          <Route path="/result" element={<ProtectedRoute><ResultPage /></ProtectedRoute>} />
+          <Route path="/quiz/history" element={<QuizHistory />} />
+          <Route path="/quiz/:categoryId" element={<QuizQuestions />} />
+          <Route path="/result" element={<QuizResult />} />
           <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>

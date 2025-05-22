@@ -29,7 +29,7 @@ const Login = () => {
         return;
       }
       
-      console.log("Login successful, user role:", userData.role);
+      // console.log("Login successful, user role:", userData.role);
       
       // Update auth context
       authLogin(userData);

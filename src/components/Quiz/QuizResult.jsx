@@ -15,7 +15,7 @@ const QuizResult = () => {
       <div className="p-6 text-center">
         <p>No quiz data found.</p>
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/login")}
           className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
         >
           Go Home

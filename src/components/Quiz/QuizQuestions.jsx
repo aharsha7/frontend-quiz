@@ -137,15 +137,13 @@ const QuizQuestions = () => {
                     : "bg-white border-gray-300 hover:bg-blue-100 hover:border-blue-400"
                 }`}
               >
-                <div
-                  className={`w-5 h-5 mr-4 rounded-full border-2 flex items-center justify-center ${
-                    isSelected ? "border-white bg-white" : "border-gray-400"
-                  }`}
-                >
-                  {isSelected && (
-                    <div className="w-2.5 h-2.5 bg-blue-600 rounded-full"></div>
-                  )}
-                </div>
+                <input
+                  type="radio"
+                  name={`option-${question._id}`}
+                  checked={isSelected}
+                  onChange={() => handleOptionSelect(question._id, option)}
+                  className="form-radio h-5 w-5 text-blue-600 mr-4 cursor-pointer"
+                />
                 <span className={`text-base font-medium`}>{option}</span>
               </div>
             );

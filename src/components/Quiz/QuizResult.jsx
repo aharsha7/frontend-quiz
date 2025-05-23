@@ -25,67 +25,58 @@ const QuizResult = () => {
   }
 
   // Calculate number of correct answers - use backendResult if available
-  let correctCount = 0;
-  let attemptedCount = 0;
-  let percentage = 0;
+  let scoreText = "";
   let answersToShow = answers;
   let backendResult = location.state?.backendResult;
+  let correctCount = 0;
 
   if (backendResult && backendResult.correctAnswers) {
-    // Use backend's correct answers
     answersToShow = questions.map((q, idx) => {
-      return backendResult.answers?.find(a => a.question === q._id)?.answer || answers[idx];
+      return (
+        backendResult.answers?.find((a) => a.question === q._id)?.answer ||
+        answers[idx]
+      );
     });
-    correctCount = backendResult.correctCount || 0;
-    attemptedCount = backendResult.answers?.filter(a => a.answer !== null && a.answer !== undefined && a.answer !== '').length || 0;
-    percentage = questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
+    // Fix: Use correctCount from backendResult, fallback to manual calculation if missing
+    if (typeof backendResult.correctCount === "number") {
+      correctCount = backendResult.correctCount;
+    } else {
+      correctCount = questions.reduce((acc, q, idx) => {
+        const userAnswer = answersToShow[idx];
+        return (
+          acc + (backendResult.correctAnswers[q._id] === userAnswer ? 1 : 0)
+        );
+      }, 0);
+    }
+    scoreText = `${correctCount} / ${questions.length}`;
   } else {
-    // Fallback to frontend calculation
     correctCount = questions.reduce((acc, question, index) => {
       const userAnswer = answers[index];
-      return acc + (userAnswer && question.correctAnswer === userAnswer ? 1 : 0);
+      return (
+        acc + (userAnswer && question.correctAnswer === userAnswer ? 1 : 0)
+      );
     }, 0);
-    attemptedCount = answers.filter(
-      (ans) => ans !== null && ans !== undefined && ans !== ""
-    ).length;
-    percentage =
-      questions.length > 0
-        ? Math.round((correctCount / questions.length) * 100)
-        : 0;
+    scoreText = `${correctCount} / ${questions.length}`;
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-        Quiz Results
+    <div className="max-w-3xl mx-auto p-8 bg-gradient-to-br from-blue-100 to-purple-100 shadow-2xl rounded-3xl">
+      <h2 className="text-4xl font-extrabold mb-8 text-center text-blue-800 tracking-tight drop-shadow-lg">
+        🎉 Quiz Results
       </h2>
 
-      <div className="bg-gray-50 p-6 rounded-lg mb-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-2xl font-bold text-blue-600">
-              {questions.length}
-            </p>
-            <p className="text-sm text-gray-600">Total Questions</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-2xl font-bold text-yellow-600">
-              {attemptedCount}
-            </p>
-            <p className="text-sm text-gray-600">Attempted</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-2xl font-bold text-green-600">{correctCount}</p>
-            <p className="text-sm text-gray-600">Correct</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-2xl font-bold text-purple-600">{percentage}%</p>
-            <p className="text-sm text-gray-600">Score</p>
-          </div>
+      <div className="flex flex-col items-center mb-10">
+        <div className="bg-white rounded-2xl shadow-lg px-10 py-6 flex flex-col items-center w-full max-w-md">
+          <span className="text-5xl font-black text-purple-700 mb-2">
+            {scoreText}
+          </span>
+          <span className="text-lg text-gray-600 font-semibold mb-1">
+            Score
+          </span>
         </div>
       </div>
 
-      <div className="space-y-6 mb-8">
+      <div className="space-y-8 mb-10">
         {questions.map((q, i) => {
           const userAnswer = answersToShow[i];
           let isCorrect = false;
@@ -99,81 +90,71 @@ const QuizResult = () => {
           return (
             <div
               key={q._id || i}
-              className="border-2 border-gray-200 p-6 rounded-lg shadow-sm"
+              className="border-2 border-gray-200 p-6 rounded-2xl shadow-md bg-white hover:shadow-xl transition-shadow"
             >
-              <p className="font-bold mb-4 text-lg text-gray-800">
+              <p className="font-bold mb-4 text-lg text-blue-900">
                 Q{i + 1}: {q.questionText}
               </p>
               <div className="space-y-3">
                 {q.options.map((opt, idx) => {
                   const isCorrectAnswer = opt === q.correctAnswer;
                   const isUserAnswer = opt === userAnswer;
-
                   let bgColor = "bg-white";
                   let borderColor = "border-gray-200";
                   let textColor = "text-gray-700";
-                  let icon = "";
-
-                  if (isCorrectAnswer) {
+                  let icon = null;
+                  if (isUserAnswer && isCorrectAnswer) {
                     bgColor = "bg-green-50";
                     borderColor = "border-green-400";
                     textColor = "text-green-800";
-                    icon = "✓ ";
-                  }
-
-                  if (isUserAnswer && !isCorrectAnswer) {
+                    icon = <span className="text-green-600 mr-2">✓</span>;
+                  } else if (isUserAnswer && !isCorrectAnswer) {
                     bgColor = "bg-red-50";
                     borderColor = "border-red-400";
                     textColor = "text-red-800";
-                    icon = "✗ ";
+                    icon = <span className="text-red-600 mr-2">✗</span>;
+                  } else if (isCorrectAnswer) {
+                    bgColor = "bg-green-50";
+                    borderColor = "border-green-400";
+                    textColor = "text-green-800";
                   }
-
                   return (
                     <div
                       key={idx}
-                      className={`p-4 rounded-lg border-2 ${bgColor} ${borderColor}`}
+                      className={`p-4 rounded-lg border-2 ${bgColor} ${borderColor} flex items-center`}
                     >
-                      <div className="flex items-center">
-                        <span
-                          className={`font-bold mr-2 ${
-                            isCorrectAnswer
-                              ? "text-green-600"
-                              : isUserAnswer
-                              ? "text-red-600"
-                              : ""
-                          }`}
-                        >
-                          {icon}
+                      {icon}
+                      <span className={`font-medium ${textColor}`}>{opt}</span>
+                      {isCorrectAnswer && !isUserAnswer && (
+                        <span className="ml-auto text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                          Correct Answer
                         </span>
-                        <span className={`font-medium ${textColor}`}>
-                          {opt}
+                      )}
+                      {isUserAnswer && !isCorrectAnswer && (
+                        <span className="ml-auto text-xs bg-red-100 text-red-800 px-2 py-1 rounded">
+                          Your Answer
                         </span>
-                        {isCorrectAnswer && (
-                          <span className="ml-auto text-sm bg-green-100 text-green-800 px-2 py-1 rounded">
-                            Correct Answer
-                          </span>
-                        )}
-                        {isUserAnswer && !isCorrectAnswer && (
-                          <span className="ml-auto text-sm bg-red-100 text-red-800 px-2 py-1 rounded">
-                            Your Answer
-                          </span>
-                        )}
-                      </div>
+                      )}
+                      {isCorrectAnswer && isUserAnswer && (
+                        <span className="ml-auto text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                          Correct & Your Answer
+                        </span>
+                      )}
                     </div>
                   );
                 })}
               </div>
-              <div className="mt-4 p-3 bg-gray-100 rounded">
+              <div className="mt-4 p-3 bg-gray-50 rounded-xl">
                 <p className="text-sm">
                   <span className="font-medium">Your Answer: </span>
                   <span
-                    className={`${
+                    className={
                       isUnanswered
                         ? "text-gray-500"
                         : isCorrect
                         ? "text-green-600 font-medium"
                         : "text-red-600 font-medium"
-                    }`}
+                    }
                   >
                     {userAnswer || "Not answered"}
                   </span>
@@ -193,32 +174,39 @@ const QuizResult = () => {
                       : "– Incorrect"}
                   </span>
                 </p>
+                {!isCorrect && (
+                  <p className="text-xs mt-2 text-green-700">
+                    Correct Answer:{" "}
+                    <span className="font-semibold">{q.correctAnswer}</span>
+                  </p>
+                )}
               </div>
             </div>
           );
         })}
       </div>
 
-      <div className="flex justify-center space-x-4">
+      <div className="flex justify-center space-x-6 mt-8">
         <button
           onClick={() => navigate("/quiz/dashboard")}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-md"
+          className="bg-blue-700 hover:bg-blue-800 text-white px-8 py-3 rounded-xl font-bold shadow-lg text-lg transition"
         >
           Back to Home
         </button>
         <button
           onClick={() => {
-            // Shuffle questions
             const shuffled = [...questions].sort(() => Math.random() - 0.5);
-            // Get categoryId from first question (assuming all questions are from the same category)
-            const categoryId = questions[0]?.category || questions[0]?.categoryId;
+            const categoryId =
+              questions[0]?.category || questions[0]?.categoryId;
             if (categoryId) {
-              navigate(`/quiz/${categoryId}`, { state: { questions: shuffled } });
+              navigate(`/quiz/${categoryId}`, {
+                state: { questions: shuffled },
+              });
             } else {
-              alert('Category ID not found for retake.');
+              alert("Category ID not found for retake.");
             }
           }}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium shadow-md"
+          className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg text-lg transition"
         >
           Retake Quiz
         </button>

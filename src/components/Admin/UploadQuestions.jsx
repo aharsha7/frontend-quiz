@@ -70,8 +70,6 @@ const UploadQuestions = () => {
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Upload Quiz Questions</h2>
-      
       <form onSubmit={handleUpload} className="space-y-4">
         <div>
           <label htmlFor="categoryName" className="block text-sm font-medium text-gray-700 mb-2">

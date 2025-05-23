@@ -1,6 +1,6 @@
 // context/AuthContext.jsx
-import React, { createContext, useState, useEffect } from 'react';
-import { getCurrentUser, logoutUser } from '../services/authService';
+import React, { createContext, useState, useEffect } from "react";
+import { getCurrentUser, logoutUser } from "../services/authService";
 
 // Create the AuthContext
 export const AuthContext = createContext();
@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
       setUser(currentUser);
       setLoading(false);
     };
-    
+
     loadUser();
   }, []);
 
@@ -44,13 +44,11 @@ export const AuthProvider = ({ children }) => {
     logout,
     hasRole,
     isAuthenticated: !!user,
-    isAdmin: user && user.role === 'admin',
+    isAdmin: user && user.role === "admin",
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 

@@ -28,12 +28,12 @@ const QuizHistory = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -94,8 +94,9 @@ const QuizHistory = () => {
                     <div className="flex-1">
                       <div className="flex items-center space-x-4 mb-3">
                         <h3 className="text-lg font-semibold text-gray-800">
-                          {result.category.name}
+                          {result.category?.name || "Unknown Category"}
                         </h3>
+
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(
                             result.score,
@@ -105,7 +106,7 @@ const QuizHistory = () => {
                           {result.score}/{result.total}
                         </span>
                       </div>
-                      
+
                       <div className="text-sm text-gray-500 mb-3">
                         Taken on {formatDate(result.createdAt)}
                       </div>
@@ -126,9 +127,7 @@ const QuizHistory = () => {
                             >
                               <div className="flex items-center justify-between">
                                 <span>Q{index + 1}</span>
-                                <span>
-                                  {answer.isCorrect ? "✓" : "✗"}
-                                </span>
+                                <span>{answer.isCorrect ? "✓" : "✗"}</span>
                               </div>
                               <div className="text-xs mt-1 opacity-75">
                                 {answer.selectedAnswer}

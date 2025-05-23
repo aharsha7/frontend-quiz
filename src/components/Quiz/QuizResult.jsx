@@ -6,9 +6,9 @@ const QuizResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Ensure fallback to empty arrays if undefined
   const questions = location.state?.questions || [];
   const answers = location.state?.answers || [];
+  const backendResult = location.state?.backendResult;
 
   if (!questions.length) {
     return (
@@ -24,40 +24,35 @@ const QuizResult = () => {
     );
   }
 
-  // Calculate number of correct answers - use backendResult if available
-  let scoreText = "";
+  // Determine answers to display
   let answersToShow = answers;
-  let backendResult = location.state?.backendResult;
   let correctCount = 0;
 
-  if (backendResult && backendResult.correctAnswers) {
+  if (backendResult?.correctAnswers) {
     answersToShow = questions.map((q, idx) => {
       return (
         backendResult.answers?.find((a) => a.question === q._id)?.answer ||
         answers[idx]
       );
     });
-    // Fix: Use correctCount from backendResult, fallback to manual calculation if missing
-    if (typeof backendResult.correctCount === "number") {
-      correctCount = backendResult.correctCount;
-    } else {
-      correctCount = questions.reduce((acc, q, idx) => {
-        const userAnswer = answersToShow[idx];
-        return (
-          acc + (backendResult.correctAnswers[q._id] === userAnswer ? 1 : 0)
-        );
-      }, 0);
-    }
-    scoreText = `${correctCount} / ${questions.length}`;
+
+    correctCount =
+      typeof backendResult.correctCount === "number"
+        ? backendResult.correctCount
+        : questions.reduce((acc, q, idx) => {
+            const userAnswer = answersToShow[idx];
+            return (
+              acc + (backendResult.correctAnswers[q._id] === userAnswer ? 1 : 0)
+            );
+          }, 0);
   } else {
     correctCount = questions.reduce((acc, question, index) => {
       const userAnswer = answers[index];
-      return (
-        acc + (userAnswer && question.correctAnswer === userAnswer ? 1 : 0)
-      );
+      return acc + (userAnswer === question.correctAnswer ? 1 : 0);
     }, 0);
-    scoreText = `${correctCount} / ${questions.length}`;
   }
+
+  const scoreText = `${correctCount} / ${questions.length}`;
 
   return (
     <div className="max-w-3xl mx-auto p-8 bg-gradient-to-br from-blue-100 to-purple-100 shadow-2xl rounded-3xl">
@@ -76,16 +71,13 @@ const QuizResult = () => {
         </div>
       </div>
 
+      {/* Detailed Question Breakdown */}
       <div className="space-y-8 mb-10">
         {questions.map((q, i) => {
           const userAnswer = answersToShow[i];
-          let isCorrect = false;
-          let isUnanswered = !userAnswer || userAnswer === "";
-          if (backendResult && backendResult.correctAnswers) {
-            isCorrect = backendResult.correctAnswers[q._id] === userAnswer;
-          } else {
-            isCorrect = userAnswer && userAnswer === q.correctAnswer;
-          }
+          const isUnanswered = !userAnswer;
+          const correctAnswer = backendResult?.correctAnswers?.[q._id] || q.correctAnswer;
+          const isCorrect = userAnswer === correctAnswer;
 
           return (
             <div
@@ -97,60 +89,74 @@ const QuizResult = () => {
               </p>
               <div className="space-y-3">
                 {q.options.map((opt, idx) => {
-                  const isCorrectAnswer = opt === q.correctAnswer;
+                  const isCorrectAnswer = opt === correctAnswer;
                   const isUserAnswer = opt === userAnswer;
-                  let bgColor = "bg-white";
-                  let borderColor = "border-gray-200";
-                  let textColor = "text-gray-700";
+                  
+                  // Default styling
+                  let className = "p-4 rounded-lg border-2 flex items-center bg-white border-gray-200";
                   let icon = null;
-                  if (isUserAnswer && isCorrectAnswer) {
-                    bgColor = "bg-green-50";
-                    borderColor = "border-green-400";
-                    textColor = "text-green-800";
-                    icon = <span className="text-green-600 mr-2">✓</span>;
-                  } else if (isUserAnswer && !isCorrectAnswer) {
-                    bgColor = "bg-red-50";
-                    borderColor = "border-red-400";
-                    textColor = "text-red-800";
-                    icon = <span className="text-red-600 mr-2">✗</span>;
-                  } else if (isCorrectAnswer) {
-                    bgColor = "bg-green-50";
-                    borderColor = "border-green-400";
-                    textColor = "text-green-800";
+                  let textClass = "font-medium text-gray-700";
+
+                  if (isUnanswered) {
+                    // For unanswered questions: only show correct answer in green
+                    if (isCorrectAnswer) {
+                      className = "p-4 rounded-lg border-2 flex items-center bg-green-100 border-green-400";
+                      textClass = "font-medium text-green-800";
+                      icon = <span className="text-green-600 mr-2 text-lg">✓</span>;
+                    }
+                  } else {
+                    // For answered questions
+                    if (isUserAnswer && isCorrectAnswer) {
+                      // User's answer is correct - green with tick
+                      className = "p-4 rounded-lg border-2 flex items-center bg-green-100 border-green-400";
+                      textClass = "font-medium text-green-800";
+                      icon = <span className="text-green-600 mr-2 text-lg">✓</span>;
+                    } else if (isUserAnswer && !isCorrectAnswer) {
+                      // User's answer is wrong - red with cross
+                      className = "p-4 rounded-lg border-2 flex items-center bg-red-100 border-red-400";
+                      textClass = "font-medium text-red-800";
+                      icon = <span className="text-red-600 mr-2 text-lg">✗</span>;
+                    } else if (isCorrectAnswer && !isUserAnswer) {
+                      // Show correct answer in green (when user answered incorrectly)
+                      className = "p-4 rounded-lg border-2 flex items-center bg-green-100 border-green-400";
+                      textClass = "font-medium text-green-800";
+                      icon = <span className="text-green-600 mr-2 text-lg">✓</span>;
+                    }
                   }
+
                   return (
-                    <div
-                      key={idx}
-                      className={`p-4 rounded-lg border-2 ${bgColor} ${borderColor} flex items-center`}
-                    >
+                    <div key={idx} className={className}>
                       {icon}
-                      <span className={`font-medium ${textColor}`}>{opt}</span>
+                      <span className={textClass}>{opt}</span>
+                      
+                      {/* Labels */}
                       {isCorrectAnswer && !isUserAnswer && (
-                        <span className="ml-auto text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                        <span className="ml-auto text-xs bg-green-200 text-green-800 px-2 py-1 rounded font-medium">
                           Correct Answer
                         </span>
                       )}
                       {isUserAnswer && !isCorrectAnswer && (
-                        <span className="ml-auto text-xs bg-red-100 text-red-800 px-2 py-1 rounded">
+                        <span className="ml-auto text-xs bg-red-200 text-red-800 px-2 py-1 rounded font-medium">
                           Your Answer
                         </span>
                       )}
                       {isCorrectAnswer && isUserAnswer && (
-                        <span className="ml-auto text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                          Correct & Your Answer
+                        <span className="ml-auto text-xs bg-green-200 text-green-800 px-2 py-1 rounded font-medium">
+                          Correct ✓
                         </span>
                       )}
                     </div>
                   );
                 })}
               </div>
+
               <div className="mt-4 p-3 bg-gray-50 rounded-xl">
                 <p className="text-sm">
                   <span className="font-medium">Your Answer: </span>
                   <span
                     className={
                       isUnanswered
-                        ? "text-gray-500"
+                        ? "text-gray-500 italic"
                         : isCorrect
                         ? "text-green-600 font-medium"
                         : "text-red-600 font-medium"
@@ -170,14 +176,14 @@ const QuizResult = () => {
                     {isUnanswered
                       ? "– Unanswered"
                       : isCorrect
-                      ? "– Correct!"
-                      : "– Incorrect"}
+                      ? "– Correct ✓"
+                      : "– Incorrect ✗"}
                   </span>
                 </p>
-                {!isCorrect && (
-                  <p className="text-xs mt-2 text-green-700">
-                    Correct Answer:{" "}
-                    <span className="font-semibold">{q.correctAnswer}</span>
+                {!isCorrect && !isUnanswered && (
+                  <p className="text-sm mt-2 text-green-700">
+                    <span className="font-medium">Correct Answer: </span>
+                    <span className="font-semibold text-green-800">{correctAnswer}</span>
                   </p>
                 )}
               </div>
@@ -186,6 +192,7 @@ const QuizResult = () => {
         })}
       </div>
 
+      {/* Action Buttons */}
       <div className="flex justify-center space-x-6 mt-8">
         <button
           onClick={() => navigate("/quiz/dashboard")}
@@ -196,8 +203,7 @@ const QuizResult = () => {
         <button
           onClick={() => {
             const shuffled = [...questions].sort(() => Math.random() - 0.5);
-            const categoryId =
-              questions[0]?.category || questions[0]?.categoryId;
+            const categoryId = questions[0]?.category || questions[0]?.categoryId;
             if (categoryId) {
               navigate(`/quiz/${categoryId}`, {
                 state: { questions: shuffled },

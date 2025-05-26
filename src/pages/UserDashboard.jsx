@@ -6,13 +6,12 @@ import axios from "axios";
 const UserDashboard = () => {
   const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem("userInfo")) || {};
-  const token = userData.token; // ✅ Get token from userInfo object
+  const token = userData.token;
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
       if (!token) {
-        console.warn("No token found. Redirecting to login.");
         navigate("/login");
         return;
       }
@@ -31,15 +30,9 @@ const UserDashboard = () => {
 
         setCategories(response.data);
       } catch (error) {
-        console.error("Failed to fetch categories", error);
-
         if (error.response?.status === 401) {
-          console.error("Unauthorized. Redirecting to login.");
           localStorage.removeItem("userInfo");
           navigate("/login");
-        } else if (error.response?.status === 403) {
-          console.error("Forbidden access. You might not be a user.");
-          // Optional: show error UI
         }
       }
     };
@@ -51,14 +44,14 @@ const UserDashboard = () => {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Welcome, {userData?.name} 👋</h1>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Quiz Categories Section */}
-        <div className="p-4 border rounded-xl shadow-md bg-white col-span-2">
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Left Card - Available Quizzes */}
+        <div className="flex-1 p-6 border rounded-xl shadow-md bg-white min-w-[300px]">
           <h2 className="text-xl font-semibold mb-4">Available Quizzes</h2>
           {categories.length === 0 ? (
             <p className="text-gray-500">No quiz categories available yet.</p>
           ) : (
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {categories.map((cat) => (
                 <Link
                   key={cat._id}
@@ -72,8 +65,8 @@ const UserDashboard = () => {
           )}
         </div>
 
-        {/* History Section */}
-        <div className="p-4 border rounded-xl shadow-md bg-white">
+        {/* Right Card - Quiz History */}
+        <div className="flex-1 p-6 border rounded-xl shadow-md bg-white min-w-[300px]">
           <h2 className="text-xl font-semibold mb-2">Your Quiz History</h2>
           <p className="text-sm text-gray-600 mb-4">
             See your previous quiz attempts and scores.

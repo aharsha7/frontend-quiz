@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const UploadQuestions = () => {
   const [categoryName, setCategoryName] = useState('');
-  const [timer, setTimer] = useState('');  // New state for timer
+  const [timer, setTimer] = useState('');
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,6 @@ const UploadQuestions = () => {
       return setMessage('Please enter a category name, timer, and select a CSV file.');
     }
 
-    // Validate timer as a positive number
     const timerNum = Number(timer);
     if (isNaN(timerNum) || timerNum <= 0) {
       return setMessage('Timer must be a positive number (in minutes).');
@@ -40,7 +39,7 @@ const UploadQuestions = () => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('category', categoryName.trim());
-    formData.append('timer', timerNum); // Append timer to form data
+    formData.append('timer', timerNum);
 
     try {
       setLoading(true);
@@ -52,7 +51,7 @@ const UploadQuestions = () => {
       });
       setMessage(`✅ ${data.message} (${data.count} questions)`);
       setCategoryName('');
-      setTimer(''); // Reset timer input
+      setTimer('');
       setFile(null);
       const fileInput = document.getElementById('file');
       if (fileInput) fileInput.value = '';
@@ -69,8 +68,9 @@ const UploadQuestions = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-      <form onSubmit={handleUpload} className="space-y-4">
+    <div className="w-full max-w-3xl mx-auto my-6 bg-white rounded-xl shadow-lg p-8 overflow-y-auto max-h-[90vh]">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Upload Questions via CSV</h2>
+      <form onSubmit={handleUpload} className="space-y-5">
         <div>
           <label htmlFor="categoryName" className="block text-sm font-medium text-gray-700 mb-2">
             Category Name
@@ -121,7 +121,9 @@ const UploadQuestions = () => {
           type="submit"
           disabled={loading}
           className={`w-full py-2 px-4 rounded-md font-medium text-white transition duration-200 ${
-            loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+            loading
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
           }`}
         >
           {loading ? 'Uploading...' : 'Upload Questions'}
@@ -129,11 +131,13 @@ const UploadQuestions = () => {
       </form>
 
       {message && (
-        <div className={`mt-4 p-3 rounded-md border ${
-          message.includes('✅') 
-            ? 'bg-green-50 text-green-700 border-green-200' 
-            : 'bg-red-50 text-red-700 border-red-200'
-        }`}>
+        <div
+          className={`mt-6 p-4 rounded-md border text-sm ${
+            message.includes('✅')
+              ? 'bg-green-50 text-green-700 border-green-200'
+              : 'bg-red-50 text-red-700 border-red-200'
+          }`}
+        >
           {message}
         </div>
       )}

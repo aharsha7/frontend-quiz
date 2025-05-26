@@ -21,7 +21,7 @@ const Navbar = () => {
 
     // Check periodically for changes
     const interval = setInterval(checkUserInfo, 100);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -34,21 +34,28 @@ const Navbar = () => {
 
   return (
     <nav className="bg-blue-900 text-white p-4 flex justify-between items-center">
-      <h1
-        className="text-sm font-bold cursor-pointer"
-      >
-        Quiz App
-      </h1>
-      {user?.role === "admin" && (
-        <Link to="/admin/dashboard">Home</Link>
-      )}
-      {user?.role === "user" && (
-        <Link to="/quiz/dashboard">Home</Link>
-      )}
+      <h1 className="text-lg font-bold cursor-pointer">Quiz App</h1>
+      {user?.role === "user" && <Link to="/quiz/dashboard">Home</Link>}
       <div className="flex items-center gap-4">
         {user && (
           <>
-            <span>{user.name}</span>
+            <span className="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-blue-200 bg-blue-800 rounded-full p-1 border border-blue-400 shadow"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5.121 17.804A9.004 9.004 0 0112 15c2.21 0 4.21.805 5.879 2.146M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+              <span className="font-medium text-white">{user.name}</span>
+            </span>
             <button
               onClick={handleLogout}
               className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 transition"

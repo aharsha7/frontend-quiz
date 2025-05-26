@@ -8,6 +8,7 @@ const Login = () => {
   const [password, setPassword] = useState("123456");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
   const { login: authLogin } = useContext(AuthContext);
@@ -44,9 +45,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div
+      className="flex h-screen bg-gray-100 overflow-hidden"
+      style={{ overflow: "hidden" }}
+    >
       {/* Left Side */}
       <div className="w-1/2 bg-blue-600 text-white flex flex-col justify-center items-center p-10">
+        <img src="logoquiz4.jpg" alt="QuizMaster Logo" className="mb-4" />
         <h2 className="text-4xl font-bold mb-4">Welcome to QuizMaster!</h2>
         <p className="text-lg text-center px-4">
           Test your knowledge with fun quizzes. Sign in to get started!
@@ -78,14 +83,54 @@ const Login = () => {
             </div>
             <div className="mb-6">
               <label className="block text-gray-700 mb-1">Password</label>
-              <input
-                type="password"
-                placeholder="Enter your password"
-                className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 pr-12"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10 0-1.657.336-3.234.938-4.675m2.062 2.675A9.956 9.956 0 0112 5c5.523 0 10 4.477 10 10 0 1.657-.336 3.234-.938 4.675m-2.062-2.675A9.956 9.956 0 0112 19c-1.657 0-3.234-.336-4.675-.938"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-6 0a6 6 0 1112 0 6 6 0 01-12 0z"
+                      />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
             <button
               type="submit"

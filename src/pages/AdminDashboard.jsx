@@ -1,21 +1,24 @@
-// components/Admin/AdminDashboard.jsx
 import React, { useState } from "react";
+import Modal from "react-modal";
 import UploadQuestions from "../components/Admin/UploadQuestions";
 import AdminAddQuestions from "../components/Admin/ManualQuestionForm";
 import CategoryManager from "../components/Admin/CategoryManager";
+import { FolderKanban, FileUp, FilePlus, XCircle } from "lucide-react";
+
+Modal.setAppElement("#root");
 
 const AdminDashboard = () => {
+  const [modalType, setModalType] = useState(null);
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
+
+  const openModal = (type) => setModalType(type);
+  const closeModal = () => setModalType(null);
 
   const handleManualSubmit = async (data) => {
     try {
       const user = JSON.parse(localStorage.getItem("userInfo"));
       const token = user?.token;
-
-      if (!token) {
-        alert("❌ No token found. Please login again.");
-        return;
-      }
+      if (!token) return;
 
       const response = await fetch("http://localhost:5000/api/quiz/manual-upload", {
         method: "POST",
@@ -28,35 +31,70 @@ const AdminDashboard = () => {
 
       const resData = await response.json();
       if (response.ok) {
-        alert("✅ Questions added successfully!");
         setSubmissionSuccess(true);
-      } else {
-        alert("❌ Error: " + (resData?.message || "Unknown error"));
       }
     } catch (error) {
-      alert("❌ Submission failed: " + error.message);
+      console.error("Manual submission failed", error);
     }
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Admin Dashboard</h1>
+    <div className="p-6 max-w-6xl mx-auto">
+      <h1 className="text-4xl font-bold text-center mb-10 text-gray-800">🛠️ Admin Dashboard</h1>
 
-      <CategoryManager />
-
-      <div className="mb-10">
-        <h2 className="text-xl font-semibold mb-2 text-gray-700">Upload Questions via CSV</h2>
-        <UploadQuestions />
+      {/* Grid for Action Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+        <div
+          onClick={() => openModal("manage")}
+          className="bg-white hover:bg-gray-50 cursor-pointer rounded-xl p-6 shadow border text-center transition"
+        >
+          <FolderKanban className="w-10 h-10 mx-auto text-blue-600 mb-2" />
+          <h2 className="text-lg font-semibold text-gray-700">Manage Categories</h2>
+          <p className="text-gray-500 text-sm">View or delete quiz categories.</p>
+        </div>
+        <div
+          onClick={() => openModal("upload")}
+          className="bg-white hover:bg-gray-50 cursor-pointer rounded-xl p-6 shadow border text-center transition"
+        >
+          <FileUp className="w-10 h-10 mx-auto text-green-600 mb-2" />
+          <h2 className="text-lg font-semibold text-gray-700">Upload Questions</h2>
+          <p className="text-gray-500 text-sm">Bulk upload questions via CSV file.</p>
+        </div>
+        <div
+          onClick={() => openModal("add")}
+          className="bg-white hover:bg-gray-50 cursor-pointer rounded-xl p-6 shadow border text-center transition"
+        >
+          <FilePlus className="w-10 h-10 mx-auto text-purple-600 mb-2" />
+          <h2 className="text-lg font-semibold text-gray-700">Add Questions Manually</h2>
+          <p className="text-gray-500 text-sm">Add questions one-by-one with details.</p>
+        </div>
       </div>
 
-      <div>
-        <h2 className="text-xl font-semibold mb-4 text-gray-700">Add Questions Manually</h2>
-        <AdminAddQuestions
-          onSubmit={handleManualSubmit}
-          submissionSuccess={submissionSuccess}
-          setSubmissionSuccess={setSubmissionSuccess}
-        />
-      </div>
+      {/* Large Responsive Modal */}
+      <Modal
+        isOpen={modalType !== null}
+        onRequestClose={closeModal}
+        contentLabel="Admin Modal"
+        className="w-full max-w-5xl h-[90vh] overflow-y-auto bg-white rounded-xl shadow-2xl p-6 relative mx-4"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center"
+      >
+        <button
+          onClick={closeModal}
+          className="absolute top-4 right-4 text-gray-500 hover:text-red-600"
+        >
+          <XCircle className="w-6 h-6" />
+        </button>
+
+        {modalType === "manage" && <CategoryManager />}
+        {modalType === "upload" && <UploadQuestions />}
+        {modalType === "add" && (
+          <AdminAddQuestions
+            onSubmit={handleManualSubmit}
+            submissionSuccess={submissionSuccess}
+            setSubmissionSuccess={setSubmissionSuccess}
+          />
+        )}
+      </Modal>
     </div>
   );
 };

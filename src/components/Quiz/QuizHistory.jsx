@@ -1,6 +1,7 @@
 // src/components/Quiz/QuizHistory.jsx
 import React, { useEffect, useState } from "react";
 import { fetchQuizHistory } from "../../services/resultService";
+import { DotLoader } from "react-spinners"; // ✅ New spinner
 
 const QuizHistory = () => {
   const [history, setHistory] = useState([]);
@@ -48,7 +49,7 @@ const QuizHistory = () => {
     return (
       <div className="max-w-4xl mx-auto p-6 mt-10">
         <div className="flex items-center justify-center h-64">
-          <div className="text-lg text-gray-600">Loading quiz history...</div>
+          <DotLoader color="#6366f1" size={60} />
         </div>
       </div>
     );

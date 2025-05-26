@@ -88,7 +88,7 @@ const CategoryManager = () => {
               <span className="capitalize text-gray-700">{cat}</span>
               <button
                 onClick={() => confirmDelete(cat)}
-                className="text-sm text-red-600 hover:underline"
+                className="px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:text-red-700 hover:border-red-300 focus:outline-none focus:ring-2"
               >
                 Delete
               </button>

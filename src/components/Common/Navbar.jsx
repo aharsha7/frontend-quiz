@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { User, LogOut } from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -16,51 +16,49 @@ const Navbar = () => {
       }
     };
 
-    // Check initially
+    // Initial and periodic check
     checkUserInfo();
-
-    // Check periodically for changes
     const interval = setInterval(checkUserInfo, 100);
-
     return () => clearInterval(interval);
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("userInfo"); // Fixed: was "user", now matches the key
-    setUser(null); // Clear user state to trigger re-render
+    localStorage.removeItem("userInfo");
+    setUser(null);
     navigate("/login");
   };
 
   return (
-    <nav className="bg-blue-900 text-white p-4 flex justify-between items-center">
-      <h1 className="text-lg font-bold cursor-pointer">Quiz App</h1>
-      {user?.role === "user" && <Link to="/quiz/dashboard">Home</Link>}
+    <nav className="bg-gradient-to-r from-teal-600 via-cyan-500 to-blue-900 text-white p-4 flex justify-between items-center shadow">
+      <h1
+        className="text-lg font-bold cursor-pointer hover:opacity-90 transition"
+        onClick={() => navigate("/")}
+      >
+        Quiz App
+      </h1>
+
+      {user?.role === "user" && (
+        <Link
+          className="text-lg font-medium hover:underline"
+          to="/quiz/dashboard"
+        >
+          Home
+        </Link>
+      )}
+
       <div className="flex items-center gap-4">
         {user && (
           <>
-            <span className="flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-blue-200 bg-blue-800 rounded-full p-1 border border-blue-400 shadow"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5.121 17.804A9.004 9.004 0 0112 15c2.21 0 4.21.805 5.879 2.146M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
+            <div className="flex items-center gap-2">
+              <User className="w-7 h-7 text-white bg-blue-700 p-1 rounded-full border border-blue-300" />
               <span className="font-medium text-white">{user.name}</span>
-            </span>
+            </div>
             <button
               onClick={handleLogout}
-              className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 transition"
+              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition text-white font-medium"
             >
-              Logout
+              <LogOut size={18} /> Logout
             </button>
           </>
         )}

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchQuestionsByCategory } from "../../services/quizService";
+import { ClipLoader } from "react-spinners"; // ✅ Import spinner
 
 const QuizQuestions = () => {
   const { categoryId } = useParams();
@@ -12,6 +13,7 @@ const QuizQuestions = () => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [timer, setTimer] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(true); // ✅ Loading state
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -21,6 +23,8 @@ const QuizQuestions = () => {
         setTimer(data.categoryTimer * 60);
       } catch (error) {
         console.error("Error fetching questions:", error);
+      } finally {
+        setLoading(false); // ✅ Stop loader
       }
     };
     loadQuestions();
@@ -56,11 +60,10 @@ const QuizQuestions = () => {
     const answersArray = questions.map((q) => selectedOptions[q._id] || null);
 
     try {
-      // Submit results to backend
       const token = localStorage.getItem("userInfo")
         ? JSON.parse(localStorage.getItem("userInfo")).token
         : null;
-      const categoryIdToSend = categoryId;
+
       const response = await fetch("http://localhost:5000/api/result/submit", {
         method: "POST",
         headers: {
@@ -68,37 +71,32 @@ const QuizQuestions = () => {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
-          categoryId: categoryIdToSend,
+          categoryId,
           answers: questions.map((q, idx) => ({
             question: q._id,
             answer: answersArray[idx],
           })),
         }),
       });
+
       const resultData = await response.json();
-      // Navigate to result page with backend result
       navigate("/result", {
         state: {
-          questions: questions,
+          questions,
           answers: answersArray,
           backendResult: resultData,
         },
       });
     } catch (error) {
       console.error("Error submitting results:", error);
-      // Fallback: still show local result
       navigate("/result", {
         state: {
-          questions: questions,
+          questions,
           answers: answersArray,
         },
       });
     }
   };
-
-  if (questions.length === 0) return <div className="p-4">Loading...</div>;
-
-  const question = questions[currentQ];
 
   const formatTime = (sec) => {
     const min = Math.floor(sec / 60);
@@ -107,6 +105,16 @@ const QuizQuestions = () => {
       .toString()
       .padStart(2, "0")}`;
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <ClipLoader color="#3b82f6" size={60} />
+      </div>
+    );
+  }
+
+  const question = questions[currentQ];
 
   return (
     <div className="max-w-3xl mx-auto p-6 mt-10 bg-gradient-to-br from-blue-50 to-white shadow-xl rounded-2xl">
@@ -144,7 +152,7 @@ const QuizQuestions = () => {
                   onChange={() => handleOptionSelect(question._id, option)}
                   className="form-radio h-5 w-5 text-blue-600 mr-4 cursor-pointer"
                 />
-                <span className={`text-base font-medium`}>{option}</span>
+                <span className="text-base font-medium">{option}</span>
               </div>
             );
           })}

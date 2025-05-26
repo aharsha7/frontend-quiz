@@ -13,6 +13,11 @@ import Register from './pages/Register';
 import QuizResult from './components/Quiz/QuizResult';
 import QuizHistory from "./components/Quiz/QuizHistory";
 
+const PublicRoute = ({ children }) => {
+  const user = JSON.parse(localStorage.getItem('userInfo'));
+  return user ? <Navigate to={user.role === "admin" ? "/admin/dashboard" : "/quiz/dashboard"} /> : children;
+};
+
 function App() {
   return (
     <Router>
@@ -20,11 +25,14 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/admin" element={<ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>}/>
+          
+          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+
+          <Route path="/admin" element={<ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>} />
           <Route path="/admin/dashboard" element={<PrivateRoute requiredRole="admin"><AdminDashboard /></PrivateRoute>} />
-          <Route path="/quiz/dashboard" element={<PrivateRoute requiredRole="user"><UserDashboard /></PrivateRoute>}/>
+          <Route path="/quiz/dashboard" element={<PrivateRoute requiredRole="user"><UserDashboard /></PrivateRoute>} />
+
           <Route path="/quiz/history" element={<QuizHistory />} />
           <Route path="/quiz/:categoryId" element={<QuizQuestions />} />
           <Route path="/result" element={<QuizResult />} />

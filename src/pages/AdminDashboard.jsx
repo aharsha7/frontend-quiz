@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import UploadQuestions from "../components/Admin/UploadQuestions";
 import AdminAddQuestions from "../components/Admin/ManualQuestionForm";
@@ -10,6 +10,19 @@ Modal.setAppElement("#root");
 const AdminDashboard = () => {
   const [modalType, setModalType] = useState(null);
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
+
+  // Prevent navigating back to login after login
+  useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+    const handlePopState = () => {
+      window.history.pushState(null, "", window.location.href);
+    };
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   const openModal = (type) => setModalType(type);
   const closeModal = () => setModalType(null);

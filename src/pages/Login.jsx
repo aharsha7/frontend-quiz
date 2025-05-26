@@ -2,10 +2,11 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
 import { AuthContext } from "../context/AuthContext";
+import { Eye, EyeOff } from "lucide-react"; 
 
 const Login = () => {
   const [email, setEmail] = useState("aharsha7na@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [password, setPassword] = useState("123456"); 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -45,12 +46,9 @@ const Login = () => {
   };
 
   return (
-    <div
-      className="flex h-screen bg-gray-100 overflow-hidden"
-      style={{ overflow: "hidden" }}
-    >
+    <div className="flex h-screen bg-gray-100 overflow-hidden">
       {/* Left Side */}
-      <div className="w-1/2 bg-blue-600 text-white flex flex-col justify-center items-center p-10">
+      <div className="w-1/2 bg-gradient-to-tr from-emerald-400 via-cyan-400 to-purple-500 text-white flex flex-col justify-center items-center p-10">
         <img src="logoquiz4.jpg" alt="QuizMaster Logo" className="mb-4" />
         <h2 className="text-4xl font-bold mb-4">Welcome to QuizMaster!</h2>
         <p className="text-lg text-center px-4">
@@ -98,43 +96,13 @@ const Login = () => {
                   onClick={() => setShowPassword((prev) => !prev)}
                   tabIndex={-1}
                 >
-                  {showPassword ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10 0-1.657.336-3.234.938-4.675m2.062 2.675A9.956 9.956 0 0112 5c5.523 0 10 4.477 10 10 0 1.657-.336 3.234-.938 4.675m-2.062-2.675A9.956 9.956 0 0112 19c-1.657 0-3.234-.336-4.675-.938"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-6 0a6 6 0 1112 0 6 6 0 01-12 0z"
-                      />
-                    </svg>
-                  )}
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition duration-200"
+              className="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-xl font-semibold transition duration-200"
               disabled={loading}
             >
               {loading ? "Logging in..." : "Login"}

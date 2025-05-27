@@ -5,8 +5,8 @@ import { AuthContext } from "../context/AuthContext";
 import { Eye, EyeOff } from "lucide-react"; 
 
 const Login = () => {
-  const [email, setEmail] = useState("aharsha7na@gmail.com");
-  const [password, setPassword] = useState("123456"); 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState(""); 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);

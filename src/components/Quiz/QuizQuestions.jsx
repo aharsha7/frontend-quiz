@@ -1,8 +1,9 @@
 // src/components/Quiz/QuizQuestions.jsx
 import React, { useEffect, useState } from "react";
+import api from "../../services/api";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchQuestionsByCategory } from "../../services/quizService";
-import { ClipLoader } from "react-spinners"; // ✅ Import spinner
+import { ClipLoader } from "react-spinners";
 
 const QuizQuestions = () => {
   const { categoryId } = useParams();
@@ -13,7 +14,7 @@ const QuizQuestions = () => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [timer, setTimer] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [loading, setLoading] = useState(true); // ✅ Loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -24,7 +25,7 @@ const QuizQuestions = () => {
       } catch (error) {
         console.error("Error fetching questions:", error);
       } finally {
-        setLoading(false); // ✅ Stop loader
+        setLoading(false);
       }
     };
     loadQuestions();
@@ -64,22 +65,24 @@ const QuizQuestions = () => {
         ? JSON.parse(localStorage.getItem("userInfo")).token
         : null;
 
-      const response = await fetch("http://localhost:5000/api/result/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
+      const response = await api.post(
+        "/api/result/submit",
+        {
           categoryId,
           answers: questions.map((q, idx) => ({
             question: q._id,
             answer: answersArray[idx],
           })),
-        }),
-      });
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
 
-      const resultData = await response.json();
+      const resultData = response.data;
       navigate("/result", {
         state: {
           questions,
@@ -88,7 +91,7 @@ const QuizQuestions = () => {
         },
       });
     } catch (error) {
-      console.error("Error submitting results:", error);
+      console.error("Error submitting results:", error.response?.data || error);
       navigate("/result", {
         state: {
           questions,

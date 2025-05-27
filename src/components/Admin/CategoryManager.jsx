@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import api from "../../services/api";
 import Modal from "react-modal";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
@@ -18,13 +19,8 @@ const CategoryManager = () => {
     setLoading(true);
     try {
       const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
-      const res = await fetch(
-        "http://localhost:5000/api/quiz/admin/categories",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const data = await res.json();
+      const res = await api.get("/api/quiz/admin/categories");
+      const data = res.data;
       setCategories(data);
     } catch (err) {
       notyf.error("Failed to load categories");
@@ -41,14 +37,10 @@ const CategoryManager = () => {
   const handleDelete = async () => {
     try {
       const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
-      const res = await fetch(
-        `http://localhost:5000/api/quiz/admin/category/${selectedCategory}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const res = await api.delete(
+        `/api/quiz/admin/category/${selectedCategory}`
       );
-      const result = await res.json();
+      const result = res.data;
       setDeleteToast(true);
       fetchCategories();
     } catch (err) {

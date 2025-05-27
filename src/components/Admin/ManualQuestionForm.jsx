@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-const ManualQuestionForm = ({
-  onSubmit,
-  submissionSuccess,
-  setSubmissionSuccess,
-}) => {
+const ManualQuestionForm = ({ onSubmit, onClose }) => {
   const [category, setCategory] = useState("");
   const [timer, setTimer] = useState("");
+  const [showNotification, setShowNotification] = useState(false);
   const [questions, setQuestions] = useState([
     {
       text: "",
@@ -17,25 +14,18 @@ const ManualQuestionForm = ({
 
   const handleQuestionChange = (index, key, value) => {
     const updatedQuestions = [...questions];
-    if (key === "correctOption") {
-      updatedQuestions[index][key] = Number(value); // ensure it's a number
-    } else {
-      updatedQuestions[index][key] = value;
-    }
+    updatedQuestions[index][key] = key === "correctOption" ? Number(value) : value;
     setQuestions(updatedQuestions);
   };
 
   const handleOptionChange = (qIndex, optIndex, value) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[qIndex].options[optIndex] = value;
-    setQuestions(updatedQuestions);
+    const updated = [...questions];
+    updated[qIndex].options[optIndex] = value;
+    setQuestions(updated);
   };
 
   const addQuestion = () => {
-    setQuestions([
-      ...questions,
-      { text: "", options: ["", "", "", ""], correctOption: 0 },
-    ]);
+    setQuestions([...questions, { text: "", options: ["", "", "", ""], correctOption: 0 }]);
   };
 
   const removeQuestion = (index) => {
@@ -51,53 +41,76 @@ const ManualQuestionForm = ({
   const removeOption = (qIndex, optIndex) => {
     const updated = [...questions];
     updated[qIndex].options.splice(optIndex, 1);
-
-    // Adjust correctOption if needed
     if (updated[qIndex].correctOption >= updated[qIndex].options.length) {
-      updated[qIndex].correctOption = 0; // reset to first option if current correctOption removed
+      updated[qIndex].correctOption = 0;
     }
     setQuestions(updated);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate that correctOption is within options array bounds
+    // Validate correctOption bounds
     for (const q of questions) {
       if (
         q.correctOption === undefined ||
         q.correctOption < 0 ||
         q.correctOption >= q.options.length
       ) {
-        alert(`Invalid correct option selected for question: "${q.text}"`);
+        alert(`Invalid correct option for question: "${q.text}"`);
         return;
       }
     }
 
-    // Send the data to backend with correctOption as index
     const formattedQuestions = questions.map((q) => ({
       text: q.text,
       options: q.options,
       correctOption: q.correctOption,
     }));
 
-    onSubmit({ category, timer, questions: formattedQuestions });
-  };
+    try {
+      await onSubmit({ category, timer, questions: formattedQuestions });
 
-  useEffect(() => {
-    if (submissionSuccess) {
+      // Reset the form
       setCategory("");
       setTimer("");
       setQuestions([{ text: "", options: ["", "", "", ""], correctOption: 0 }]);
-      setSubmissionSuccess(false);
+
+      // Show notification
+      setShowNotification(true);
+
+      // Hide notification after 3 seconds
+      setTimeout(() => setShowNotification(false), 3000);
+
+      // Close modal after short delay
+      setTimeout(() => {
+        if (onClose) onClose();
+      }, 500);
+    } catch (error) {
+      alert("Failed to upload questions. Please try again.");
+      console.error(error);
     }
-  }, [submissionSuccess, setSubmissionSuccess]);
+  };
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-        Manage Categories
-      </h2>
+      {/* Success Notification */}
+      {showNotification && (
+        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span className="font-medium">Questions uploaded successfully!</span>
+          </div>
+        </div>
+      )}
+
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Manage Categories</h2>
       <form
         onSubmit={handleSubmit}
         className="space-y-6 p-4 bg-white shadow rounded-lg"
@@ -141,9 +154,7 @@ const ManualQuestionForm = ({
               type="text"
               placeholder="Enter question"
               value={q.text}
-              onChange={(e) =>
-                handleQuestionChange(qIndex, "text", e.target.value)
-              }
+              onChange={(e) => handleQuestionChange(qIndex, "text", e.target.value)}
               required
               className="w-full p-2 border rounded"
             />

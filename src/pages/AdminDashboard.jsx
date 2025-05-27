@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
+import api from "../services/api";
 import UploadQuestions from "../components/Admin/UploadQuestions";
 import AdminAddQuestions from "../components/Admin/ManualQuestionForm";
 import CategoryManager from "../components/Admin/CategoryManager";
@@ -33,16 +34,8 @@ const AdminDashboard = () => {
       const token = user?.token;
       if (!token) return;
 
-      const response = await fetch("http://localhost:5000/api/quiz/manual-upload", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      });
-
-      const resData = await response.json();
+      const response = await api.post("/api/quiz/manual-upload", data);
+      const resData = response.data;
       if (response.ok) {
         setSubmissionSuccess(true);
       }
@@ -53,7 +46,9 @@ const AdminDashboard = () => {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-4xl font-bold text-center mb-10 text-gray-800">🛠️ Admin Dashboard</h1>
+      <h1 className="text-4xl font-bold text-center mb-10 text-gray-800">
+        🛠️ Admin Dashboard
+      </h1>
 
       {/* Grid for Action Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
@@ -62,24 +57,36 @@ const AdminDashboard = () => {
           className="bg-white hover:bg-gray-50 cursor-pointer rounded-xl p-6 shadow border text-center transition"
         >
           <FolderKanban className="w-10 h-10 mx-auto text-blue-600 mb-2" />
-          <h2 className="text-lg font-semibold text-gray-700">Manage Categories</h2>
-          <p className="text-gray-500 text-sm">View or delete quiz categories.</p>
+          <h2 className="text-lg font-semibold text-gray-700">
+            Manage Categories
+          </h2>
+          <p className="text-gray-500 text-sm">
+            View or delete quiz categories.
+          </p>
         </div>
         <div
           onClick={() => openModal("upload")}
           className="bg-white hover:bg-gray-50 cursor-pointer rounded-xl p-6 shadow border text-center transition"
         >
           <FileUp className="w-10 h-10 mx-auto text-green-600 mb-2" />
-          <h2 className="text-lg font-semibold text-gray-700">Upload Questions</h2>
-          <p className="text-gray-500 text-sm">Bulk upload questions via CSV file.</p>
+          <h2 className="text-lg font-semibold text-gray-700">
+            Upload Questions
+          </h2>
+          <p className="text-gray-500 text-sm">
+            Bulk upload questions via CSV file.
+          </p>
         </div>
         <div
           onClick={() => openModal("add")}
           className="bg-white hover:bg-gray-50 cursor-pointer rounded-xl p-6 shadow border text-center transition"
         >
           <FilePlus className="w-10 h-10 mx-auto text-purple-600 mb-2" />
-          <h2 className="text-lg font-semibold text-gray-700">Add Questions Manually</h2>
-          <p className="text-gray-500 text-sm">Add questions one-by-one with details.</p>
+          <h2 className="text-lg font-semibold text-gray-700">
+            Add Questions Manually
+          </h2>
+          <p className="text-gray-500 text-sm">
+            Add questions one-by-one with details.
+          </p>
         </div>
       </div>
 

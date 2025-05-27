@@ -1,9 +1,13 @@
 import axios from 'axios';
 
+// Centralized API configuration
+const API_BASE_URL = 'https://backend-quiz-1-rx4t.onrender.com';
+
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',  // Common base URL for all APIs
+  baseURL: API_BASE_URL,
 });
 
+// Request interceptor to attach token
 api.interceptors.request.use(
   (config) => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
@@ -15,4 +19,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Export both the api instance and base URL for other services
+export { API_BASE_URL };
 export default api;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api"; // Adjust the import path as necessary
 import { BarLoader } from "react-spinners";
 
 const UserDashboard = () => {
@@ -24,10 +24,7 @@ const UserDashboard = () => {
           },
         };
 
-        const response = await axios.get(
-          "http://localhost:5000/api/quiz/categories",
-          config
-        );
+        const response = await api.get("/api/quiz/categories");
 
         setCategories(response.data);
       } catch (error) {
@@ -59,14 +56,18 @@ const UserDashboard = () => {
             </Link>
           </div>
 
-          <h2 className="text-xl font-semibold mb-4 text-center">Available Quizzes</h2>
+          <h2 className="text-xl font-semibold mb-4 text-center">
+            Available Quizzes
+          </h2>
 
           {loading ? (
             <div className="flex justify-center items-center h-24">
               <BarLoader color="#3b82f6" height={4} width={150} />
             </div>
           ) : categories.length === 0 ? (
-            <p className="text-gray-500 text-center">No quiz categories available yet.</p>
+            <p className="text-gray-500 text-center">
+              No quiz categories available yet.
+            </p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {categories.map((cat) => (

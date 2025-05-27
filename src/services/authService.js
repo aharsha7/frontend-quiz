@@ -1,28 +1,9 @@
-import axios from 'axios';
-
-const API_URL = 'http://localhost:5000/api/auth';
-
-// Axios instance
-const api = axios.create({
-  baseURL: API_URL,
-});
-
-// Request interceptor to attach token
-api.interceptors.request.use(
-  (config) => {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-    if (userInfo?.token) {
-      config.headers.Authorization = `Bearer ${userInfo.token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+import api from './api';
 
 // Login
 export const loginUser = async (credentials) => {
   try {
-    const { data } = await api.post('/login', credentials);
+    const { data } = await api.post('/api/auth/login', credentials);
     if (data?.token) {
       localStorage.setItem('userInfo', JSON.stringify(data));
     } else {
@@ -38,7 +19,7 @@ export const loginUser = async (credentials) => {
 // Register
 export const registerUser = async (userData) => {
   try {
-    const { data } = await api.post('/register', userData);
+    const { data } = await api.post('/api/auth/register', userData);
     if (data?.token) {
       localStorage.setItem('userInfo', JSON.stringify(data));
       console.log('Registered and token stored.');

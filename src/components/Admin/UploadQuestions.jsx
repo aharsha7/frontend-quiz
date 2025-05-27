@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../../services/api";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
-const UploadQuestions = () => {
+const notyf = new Notyf();
+
+const UploadQuestions = ({ onClose }) => {
   const [categoryName, setCategoryName] = useState("");
   const [timer, setTimer] = useState("");
   const [file, setFile] = useState(null);
@@ -45,22 +49,33 @@ const UploadQuestions = () => {
 
     try {
       setLoading(true);
-      const { data } = await axios.post(
-        `http://localhost:5000/api/quiz/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const { data } = await api.post("/api/quiz/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       setMessage(`✅ ${data.message} (${data.count} questions)`);
       setCategoryName("");
       setTimer("");
       setFile(null);
       const fileInput = document.getElementById("file");
       if (fileInput) fileInput.value = "";
+      if (onClose) {
+        onClose();
+        setTimeout(() => {
+          notyf.success({
+            message: "Questions uploaded!",
+            duration: 3000,
+            position: { x: "center", y: "top" },
+          });
+        }, 100);
+      } else {
+        notyf.success({
+          message: "Questions uploaded!",
+          duration: 3000,
+          position: { x: "center", y: "top" },
+        });
+      }
     } catch (error) {
       console.error("Upload error:", error);
       if (error.response?.status === 401) {

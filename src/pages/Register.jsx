@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api"; // Adjust the import based on your project structure
 import { Eye, EyeOff } from "lucide-react";
 import { ClipLoader } from "react-spinners";
 
@@ -26,12 +26,13 @@ const Register = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      const res = await api.post("/api/auth/register", {
         name,
         email,
         password,
       });
-      localStorage.setItem("token", res.data.token);
+      const data = res.data;
+      localStorage.setItem("token", data.token);
       setShowToast(true);
       setTimeout(() => {
         setShowToast(false);

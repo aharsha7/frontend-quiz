@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api"; // Adjust the import based on your project structure
+import api from "../services/api"; 
 import { Eye, EyeOff } from "lucide-react";
 import { ClipLoader } from "react-spinners";
 

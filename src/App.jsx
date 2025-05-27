@@ -1,10 +1,8 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Navigate, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Common/Navbar';
-import ProtectedRoute from './components/Common/ProtectedRoute';
-import PrivateRoute from "./components/Common/PrivateRoute";
+import SecureRoute from './components/Common/SecureRoute'; 
 import AdminDashboard from './pages/AdminDashboard';
 import UserDashboard from "./pages/UserDashboard";
 import QuizQuestions from './components/Quiz/QuizQuestions';
@@ -13,6 +11,7 @@ import Register from './pages/Register';
 import QuizResult from './components/Quiz/QuizResult';
 import QuizHistory from "./components/Quiz/QuizHistory";
 
+// Handle public pages like login/register
 const PublicRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('userInfo'));
   return user ? <Navigate to={user.role === "admin" ? "/admin/dashboard" : "/quiz/dashboard"} /> : children;
@@ -29,13 +28,17 @@ function App() {
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
 
-          <Route path="/admin" element={<ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>} />
-          <Route path="/admin/dashboard" element={<PrivateRoute requiredRole="admin"><AdminDashboard /></PrivateRoute>} />
-          <Route path="/quiz/dashboard" element={<PrivateRoute requiredRole="user"><UserDashboard /></PrivateRoute>} />
+          {/*Admin-only routes */}
+          <Route path="/admin" element={<SecureRoute requiredRole="admin"><AdminDashboard /></SecureRoute>} />
+          <Route path="/admin/dashboard" element={<SecureRoute requiredRole="admin"><AdminDashboard /></SecureRoute>} />
 
-          <Route path="/quiz/history" element={<QuizHistory />} />
-          <Route path="/quiz/:categoryId" element={<QuizQuestions />} />
-          <Route path="/result" element={<QuizResult />} />
+          {/*User-only route */}
+          <Route path="/quiz/dashboard" element={<SecureRoute requiredRole="user"><UserDashboard /></SecureRoute>} />
+
+          {/*Any logged-in user */}
+          <Route path="/quiz/history" element={<SecureRoute><QuizHistory /></SecureRoute>} />
+          <Route path="/quiz/:categoryId" element={<SecureRoute><QuizQuestions /></SecureRoute>} />
+          <Route path="/result" element={<SecureRoute><QuizResult /></SecureRoute>} />
         </Routes>
       </AuthProvider>
     </Router>

@@ -2,11 +2,11 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
 import { AuthContext } from "../context/AuthContext";
-import { Eye, EyeOff } from "lucide-react"; 
+import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(""); 
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -46,21 +46,27 @@ const Login = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden">
+    <div className="flex flex-col md:flex-row h-screen bg-gray-100">
       {/* Left Side */}
-      <div className="w-1/2 bg-gradient-to-tr from-emerald-400 via-cyan-400 to-purple-500 text-white flex flex-col justify-center items-center p-10">
-        <img src="logoquiz4.jpg" alt="QuizMaster Logo" className="mb-4" />
-        <h2 className="text-4xl font-bold mb-4">Welcome to QuizMaster!</h2>
-        <p className="text-lg text-center px-4">
+      <div className="w-full md:w-1/2 bg-gradient-to-tr from-emerald-400 via-cyan-400 to-purple-500 text-white flex flex-col justify-center items-center p-10 min-h-[300px]">
+        <img
+          src="logoquiz4.jpg"
+          alt="QuizMaster Logo"
+          className="mb-4 w-32 md:w-auto"
+        />
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
+          Welcome to QuizMaster!
+        </h2>
+        <p className="text-base md:text-lg text-center px-2 md:px-4">
           Test your knowledge with fun quizzes. Sign in to get started!
         </p>
       </div>
 
       {/* Right Side */}
-      <div className="w-1/2 flex justify-center items-center bg-gray-100">
-        <div className="bg-white p-12 rounded-2xl shadow-2xl border border-blue-200 flex flex-col items-center min-w-[350px] max-w-md">
+      <div className="w-full md:w-1/2 flex justify-center items-center bg-gray-100 mt-4 min-h-[300px]">
+        <div className="bg-white p-6 md:p-12 rounded-2xl shadow-2xl border border-blue-200 flex flex-col items-center w-full max-w-md min-w-0">
           <form onSubmit={handleSubmit} className="w-full">
-            <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-800">
               Login
             </h2>
             {error && (

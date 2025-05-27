@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api"; 
+import api from "../services/api";
 import { Eye, EyeOff } from "lucide-react";
 import { ClipLoader } from "react-spinners";
 
@@ -46,7 +46,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden">
+    <div className="flex flex-col md:flex-row h-screen bg-gray-100">
       {/* Toast Notification */}
       {showToast && (
         <div className="fixed top-6 right-6 z-50 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg animate-fade-in-out text-base font-semibold">
@@ -55,24 +55,26 @@ const Register = () => {
       )}
 
       {/* Left Side */}
-      <div className="w-1/2 bg-gradient-to-r from-green-500 via-lime-400 to-emerald-500 text-white flex flex-col justify-center items-center p-10">
+      <div className="w-full md:w-1/2 bg-gradient-to-r from-green-500 via-lime-400 to-emerald-500 text-white flex flex-col justify-center items-center p-10 min-h-[300px]">
         <img
           src="quiz2.jpeg"
           alt="Quiz Illustration"
-          className="w-80% max-w-sm mb-6"
+          className="w-32 md:w-4/5 max-w-sm mb-6"
         />
-        <h2 className="text-4xl font-bold mb-4">Join QuizMaster!</h2>
-        <p className="text-lg text-center px-4">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
+          Join QuizMaster!
+        </h2>
+        <p className="text-base md:text-lg text-center px-2 md:px-4">
           Create your account to start taking quizzes, track your progress, and
           challenge your friends!
         </p>
       </div>
 
       {/* Right Side */}
-      <div className="w-1/2 flex justify-center items-center bg-gray-100">
-        <div className="bg-white p-12 rounded-2xl shadow-2xl border border-blue-200 flex flex-col items-center min-w-[400px] max-w-lg">
+      <div className="w-full md:w-1/2 flex justify-center items-center bg-gray-100 min-h-[300px] mt-24 md:mt-0">
+        <div className="bg-white p-6 md:p-12 rounded-2xl shadow-2xl border border-blue-200 flex flex-col items-center w-full max-w-lg min-w-0">
           <form onSubmit={handleRegister} className="w-full">
-            <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-800">
               Register
             </h2>
             {error && (

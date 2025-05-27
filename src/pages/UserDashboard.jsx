@@ -46,8 +46,12 @@ const UserDashboard = () => {
 
       <div className="flex justify-center">
         <div className="w-full max-w-4xl p-6 border rounded-xl shadow-md bg-white min-w-[300px] relative">
-          {/* History Button */}
-          <div className="absolute top-4 right-4">
+          <h2 className="text-xl font-semibold mb-4 text-center">
+            Available Quizzes
+          </h2>
+
+          {/* History Button - below title on mobile, top-right on md+ */}
+          <div className="flex justify-center md:justify-end mb-4 md:mb-0 md:absolute md:top-4 md:right-4">
             <Link
               to="/quiz/history"
               className="px-4 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700"
@@ -55,10 +59,6 @@ const UserDashboard = () => {
               View History
             </Link>
           </div>
-
-          <h2 className="text-xl font-semibold mb-4 text-center">
-            Available Quizzes
-          </h2>
 
           {loading ? (
             <div className="flex justify-center items-center h-24">

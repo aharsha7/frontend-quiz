@@ -92,86 +92,96 @@ const ManualQuestionForm = ({ onSubmit, onClose }) => {
     }
   };
 
-  return (
-    <div>
-      {/* Success Notification */}
-      {showNotification && (
-        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="font-medium">Questions uploaded successfully!</span>
-          </div>
-        </div>
-      )}
-
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Manage Categories</h2>
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 p-4 bg-white shadow rounded-lg"
-      >
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <label className="block font-medium">Category</label>
-            <input
-              type="text"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              required
-              className="w-full p-2 border rounded"
+return (
+  <div className="px-4">
+    {/* Success Notification */}
+    {showNotification && (
+      <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+        <div className="flex items-center gap-2">
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fillRule="evenodd"
+              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+              clipRule="evenodd"
             />
-          </div>
-          <div className="flex-1">
-            <label className="block font-medium">Timer (in minutes)</label>
-            <input
-              type="number"
-              value={timer}
-              onChange={(e) => setTimer(e.target.value)}
-              required
-              className="w-full p-2 border rounded"
-            />
-          </div>
+          </svg>
+          <span className="font-medium">Questions uploaded successfully!</span>
         </div>
+      </div>
+    )}
 
-        {questions.map((q, qIndex) => (
-          <div key={qIndex} className="border p-4 rounded space-y-3">
-            <div className="flex justify-between items-center">
-              <label className="font-semibold">Question {qIndex + 1}</label>
-              <button
-                type="button"
-                onClick={() => removeQuestion(qIndex)}
-                className="text-red-500 text-sm"
+    <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+      Manage Categories
+    </h2>
+
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 p-4 bg-white shadow rounded-lg"
+    >
+      {/* Category and Timer */}
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex-1">
+          <label className="block font-medium">Category</label>
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+            className="w-full p-2 border rounded"
+          />
+        </div>
+        <div className="flex-1">
+          <label className="block font-medium">Timer (in minutes)</label>
+          <input
+            type="number"
+            value={timer}
+            onChange={(e) => setTimer(e.target.value)}
+            required
+            className="w-full p-2 border rounded"
+          />
+        </div>
+      </div>
+
+      {/* Questions List */}
+      {questions.map((q, qIndex) => (
+        <div key={qIndex} className="border p-4 rounded space-y-4">
+          <div className="flex justify-between items-center flex-wrap gap-2">
+            <label className="font-semibold">Question {qIndex + 1}</label>
+            <button
+              type="button"
+              onClick={() => removeQuestion(qIndex)}
+              className="text-red-500 text-sm hover:underline"
+            >
+              Remove
+            </button>
+          </div>
+          <input
+            type="text"
+            placeholder="Enter question"
+            value={q.text}
+            onChange={(e) => handleQuestionChange(qIndex, "text", e.target.value)}
+            required
+            className="w-full p-2 border rounded"
+          />
+
+          {/* Options */}
+          <div className="space-y-3">
+            {q.options.map((opt, optIndex) => (
+              <div
+                key={optIndex}
+                className="flex flex-col sm:flex-row sm:items-center gap-2"
               >
-                Remove
-              </button>
-            </div>
-            <input
-              type="text"
-              placeholder="Enter question"
-              value={q.text}
-              onChange={(e) => handleQuestionChange(qIndex, "text", e.target.value)}
-              required
-              className="w-full p-2 border rounded"
-            />
-
-            <div className="space-y-2">
-              {q.options.map((opt, optIndex) => (
-                <div key={optIndex} className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    placeholder={`Option ${optIndex + 1}`}
-                    value={opt}
-                    onChange={(e) =>
-                      handleOptionChange(qIndex, optIndex, e.target.value)
-                    }
-                    required
-                    className="flex-1 p-2 border rounded"
-                  />
+                <input
+                  type="text"
+                  placeholder={`Option ${optIndex + 1}`}
+                  value={opt}
+                  onChange={(e) =>
+                    handleOptionChange(qIndex, optIndex, e.target.value)
+                  }
+                  required
+                  className="flex-1 p-2 border rounded"
+                />
+                <div className="flex items-center gap-2">
                   <input
                     type="radio"
                     name={`correct-${qIndex}`}
@@ -180,47 +190,50 @@ const ManualQuestionForm = ({ onSubmit, onClose }) => {
                       handleQuestionChange(qIndex, "correctOption", optIndex)
                     }
                   />
-                  <span>Correct</span>
+                  <span className="text-sm">Correct</span>
                   {q.options.length > 2 && (
                     <button
                       type="button"
                       onClick={() => removeOption(qIndex, optIndex)}
-                      className="text-red-500 text-sm"
+                      className="text-red-500 text-sm hover:underline"
                     >
                       Remove
                     </button>
                   )}
                 </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => addOption(qIndex)}
-                className="text-blue-500 text-sm mt-2"
-              >
-                + Add Option
-              </button>
-            </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => addOption(qIndex)}
+              className="text-blue-500 text-sm"
+            >
+              + Add Option
+            </button>
           </div>
-        ))}
-
-        <div className="flex justify-between items-center gap-4">
-          <button
-            type="button"
-            onClick={addQuestion}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            + Add Another Question
-          </button>
-          <button
-            type="submit"
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded"
-          >
-            Submit Questions
-          </button>
         </div>
-      </form>
-    </div>
-  );
+      ))}
+
+      {/* Action Buttons */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <button
+          type="button"
+          onClick={addQuestion}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          + Add Another Question
+        </button>
+        <button
+          type="submit"
+          className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded"
+        >
+          Submit Questions
+        </button>
+      </div>
+    </form>
+  </div>
+);
+
 };
 
 export default ManualQuestionForm;

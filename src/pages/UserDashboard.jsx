@@ -24,7 +24,7 @@ const UserDashboard = () => {
           },
         };
 
-        const response = await api.get("/api/quiz/categories");
+        const response = await api.get("/api/quiz/categories", config);
 
         setCategories(response.data);
       } catch (error) {

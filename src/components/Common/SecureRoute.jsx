@@ -8,7 +8,7 @@ const SecureRoute = ({ children, requiredRole = null }) => {
 
   // Wait for auth to load
   if (loading) {
-    return <div>Loading...</div>; // You can replace this with a spinner if needed
+    return <div>Loading...</div>; 
   }
 
   // Not logged in

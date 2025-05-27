@@ -111,7 +111,7 @@ return (
     )}
 
     <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-      Manage Categories
+      Add Questions Manually
     </h2>
 
     <form

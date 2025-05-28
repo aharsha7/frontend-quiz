@@ -6,6 +6,22 @@ const quizService = {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     return res.data;
+  },
+
+  // Admin functions
+  getAllCategories: async () => {
+    const res = await api.get('/api/quiz/admin/categories');
+    return res.data;
+  },
+
+  getQuestionsByCategoryName: async (categoryName) => {
+    const res = await api.get(`/api/quiz/admin/questions?category=${encodeURIComponent(categoryName)}`);
+    return res.data;
+  },
+
+  deleteCategory: async (categoryName) => {
+    const res = await api.delete(`/api/quiz/admin/category/${encodeURIComponent(categoryName)}`);
+    return res.data;
   }
 };
 

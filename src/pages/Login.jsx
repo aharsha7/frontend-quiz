@@ -5,8 +5,8 @@ import { AuthContext } from "../context/AuthContext";
 import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("aharsha7na@gmail.com");
+  const [password, setPassword] = useState("123456");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -48,16 +48,16 @@ const Login = () => {
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-100">
       {/* Left Side */}
-      <div className="w-full md:w-1/2 bg-gradient-to-tr from-emerald-400 via-cyan-400 to-purple-500 text-white flex flex-col justify-center items-center p-10 min-h-[300px]">
+      <div className="w-full md:w-1/2 bg-white-100 text-white flex flex-col justify-center items-center p-10 min-h-[300px]">
         <img
-          src="logoquiz4.jpg"
-          alt="QuizMaster Logo"
-          className="mb-4 w-32 md:w-auto"
+          src="login4.png"
+          alt="QuizApp Logo"
+          className="mb-4 w-44 md:w-auto"
         />
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
-          Welcome to QuizMaster!
+        <h2 className="text-3xl md:text-4xl text-cyan-600 font-bold mb-4 text-center">
+          Welcome to QuizApp!
         </h2>
-        <p className="text-base md:text-lg text-center px-2 md:px-4">
+        <p className="text-base md:text-lg  text-cyan-950 text-center px-2 md:px-4">
           Test your knowledge with fun quizzes. Sign in to get started!
         </p>
       </div>

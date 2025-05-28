@@ -55,18 +55,17 @@ const Register = () => {
       )}
 
       {/* Left Side */}
-      <div className="w-full md:w-1/2 bg-gradient-to-r from-green-500 via-lime-400 to-emerald-500 text-white flex flex-col justify-center items-center p-10 min-h-[300px]">
+      <div className="w-full md:w-1/2 bg-white-100 text-white flex flex-col justify-center items-center p-10 min-h-[300px]">
         <img
-          src="quiz2.jpeg"
-          alt="Quiz Illustration"
+          src="login10.png"
+          alt="Quiz image"
           className="w-32 md:w-4/5 max-w-sm mb-6"
         />
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
-          Join QuizMaster!
+        <h2 className="text-3xl text-cyan-600 md:text-4xl font-bold mb-4 text-center">
+          Join QuizApp!
         </h2>
-        <p className="text-base md:text-lg text-center px-2 md:px-4">
-          Create your account to start taking quizzes, track your progress, and
-          challenge your friends!
+        <p className="text-base text-cyan-950 md:text-lg text-center px-2 md:px-4">
+          Create your account to start taking quizzes, track your progress.
         </p>
       </div>
 

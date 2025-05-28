@@ -4,6 +4,7 @@ import api from "../services/api";
 import UploadQuestions from "../components/Admin/UploadQuestions";
 import AdminAddQuestions from "../components/Admin/ManualQuestionForm";
 import CategoryManager from "../components/Admin/CategoryManager";
+import { Link } from "react-router-dom";
 import { FolderKanban, FileUp, FilePlus, XCircle } from "lucide-react";
 
 Modal.setAppElement("#root");
@@ -52,9 +53,10 @@ const AdminDashboard = () => {
 
       {/* Grid for Action Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-        <div
-          onClick={() => openModal("manage")}
-          className="bg-white hover:bg-gray-50 cursor-pointer rounded-xl p-6 shadow border text-center transition"
+
+        <Link
+          to="/admin/manage-categories"
+          className="block bg-white hover:bg-gray-50 rounded-xl p-6 shadow border text-center transition"
         >
           <FolderKanban className="w-10 h-10 mx-auto text-blue-600 mb-2" />
           <h2 className="text-lg font-semibold text-gray-700">
@@ -63,7 +65,7 @@ const AdminDashboard = () => {
           <p className="text-gray-500 text-sm">
             View or delete quiz categories.
           </p>
-        </div>
+        </Link>
         <div
           onClick={() => openModal("upload")}
           className="bg-white hover:bg-gray-50 cursor-pointer rounded-xl p-6 shadow border text-center transition"

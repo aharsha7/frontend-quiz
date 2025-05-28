@@ -119,9 +119,12 @@ const QuizQuestions = () => {
 
   const question = questions[currentQ];
 
-  return (
-    <div className="max-w-3xl mx-auto p-6 mt-10 bg-gradient-to-br from-blue-50 to-white shadow-xl rounded-2xl">
-      <div className="flex justify-between items-center mb-8">
+return (
+  <div className="flex h-screen p-6">
+    {/* Left Section - 70% */}
+    <div className="w-[70%] pr-6 flex flex-col justify-between">
+      {/* Timer Top Right */}
+      <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-gray-800">
           Question {currentQ + 1} / {questions.length}
         </h2>
@@ -130,11 +133,11 @@ const QuizQuestions = () => {
         </span>
       </div>
 
-      <div className="mb-8">
+      {/* Question */}
+      <div>
         <p className="text-xl font-semibold text-gray-700 mb-6">
           {question.questionText}
         </p>
-
         <div className="space-y-4">
           {question.options.map((option, index) => {
             const isSelected = selectedOptions[question._id] === option;
@@ -162,7 +165,8 @@ const QuizQuestions = () => {
         </div>
       </div>
 
-      <div className="flex justify-between mt-10">
+      {/* Navigation Buttons */}
+      <div className="flex justify-between mt-8">
         <button
           onClick={handlePrevious}
           disabled={currentQ === 0}
@@ -175,24 +179,57 @@ const QuizQuestions = () => {
           ⬅ Previous
         </button>
 
-        {currentQ < questions.length - 1 ? (
-          <button
-            onClick={handleNext}
-            className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium shadow-md"
-          >
-            Next ➡
-          </button>
-        ) : (
-          <button
-            onClick={handleSubmit}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium shadow-md"
-          >
-            ✅ Submit Quiz
-          </button>
-        )}
+        <button
+          onClick={handleNext}
+          disabled={currentQ >= questions.length - 1}
+          className={`px-6 py-3 rounded-lg font-medium ${
+            currentQ >= questions.length - 1
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-green-500 hover:bg-green-600 text-white shadow-md"
+          }`}
+        >
+          Next ➡
+        </button>
       </div>
     </div>
-  );
+
+    {/* Right Section - 30% */}
+    <div className="w-[30%] flex flex-col justify-between items-center border-l pl-4">
+      {/* Question Navigator */}
+      <div className="grid grid-cols-4 gap-3">
+        {questions.map((q, index) => {
+          const isAnswered = selectedOptions[q._id] !== undefined;
+          return (
+            <button
+              key={q._id}
+              onClick={() => setCurrentQ(index)}
+              className={`w-10 h-10 rounded-full text-white font-semibold shadow ${
+                index === currentQ
+                  ? "ring-4 ring-blue-400"
+                  : ""
+              } ${
+                isAnswered
+                  ? "bg-green-500 hover:bg-green-600"
+                  : "bg-red-500 hover:bg-red-600"
+              }`}
+            >
+              {index + 1}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Submit Button */}
+      <button
+        onClick={handleSubmit}
+        className="mt-6 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium shadow-md self-end"
+      >
+        ✅ Submit Quiz
+      </button>
+    </div>
+  </div>
+);
+
 };
 
 export default QuizQuestions;

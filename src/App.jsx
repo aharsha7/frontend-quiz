@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import QuizResult from './components/Quiz/QuizResult';
 import QuizHistory from "./components/Quiz/QuizHistory";
+import CategoryManager from './components/Admin/CategoryManager'; 
 
 // Handle public pages like login/register
 const PublicRoute = ({ children }) => {
@@ -31,6 +32,7 @@ function App() {
           {/*Admin-only routes */}
           <Route path="/admin" element={<SecureRoute requiredRole="admin"><AdminDashboard /></SecureRoute>} />
           <Route path="/admin/dashboard" element={<SecureRoute requiredRole="admin"><AdminDashboard /></SecureRoute>} />
+          <Route path="/admin/manage-categories" element={<SecureRoute requiredRole="admin"><CategoryManager /></SecureRoute>} />
 
           {/*User-only route */}
           <Route path="/quiz/dashboard" element={<SecureRoute requiredRole="user"><UserDashboard /></SecureRoute>} />

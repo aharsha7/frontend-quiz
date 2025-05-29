@@ -10,12 +10,13 @@ const quizService = {
 
   // Admin functions
   getAllCategories: async () => {
-    const res = await api.get('/api/quiz/admin/categories');
+    const res = await api.get('/api/quiz/admin/categories');            
     return res.data;
   },
 
+  // Fixed: Use the correct endpoint that matches your backend
   getQuestionsByCategoryName: async (categoryName) => {
-    const res = await api.get(`/api/quiz/admin/questions?category=${encodeURIComponent(categoryName)}`);
+    const res = await api.get(`/api/quiz/category/${encodeURIComponent(categoryName)}/questions`);
     return res.data;
   },
 

@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { fetchQuizHistory } from "../../services/resultService";
 import { DotLoader } from "react-spinners"; // ✅ New spinner
+import { useNavigate } from "react-router-dom";
 
 const QuizHistory = () => {
+  const navigate = useNavigate();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -48,8 +50,9 @@ const QuizHistory = () => {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto p-6 mt-10">
-        <div className="flex items-center justify-center h-64">
-          <DotLoader color="#6366f1" size={60} />
+        <div className="flex flex-col items-center justify-center h-64">
+          <span className="text-medium">Loading</span>
+          <DotLoader color="#6366f1" size={20} />
         </div>
       </div>
     );
@@ -68,9 +71,33 @@ const QuizHistory = () => {
   return (
     <div className="max-w-6xl mx-auto p-6 mt-10">
       <div className="bg-white shadow-xl rounded-2xl overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
-          <h1 className="text-3xl font-bold text-white">Quiz History</h1>
-          <p className="text-blue-100 mt-2">Your quiz performance over time</p>
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6 flex items-center gap-4">
+          <button
+            onClick={() => navigate("/quiz/dashboard")}
+            className="text-white hover:bg-blue-700 bg-blue-500 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white transition"
+            title="Back to Dashboard"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5L8.25 12l7.5-7.5"
+              />
+            </svg>
+          </button>
+          <div>
+            <h1 className="text-3xl font-bold text-white">Quiz History</h1>
+            <p className="text-blue-100 mt-2">
+              Your quiz performance over time
+            </p>
+          </div>
         </div>
 
         <div className="p-8">

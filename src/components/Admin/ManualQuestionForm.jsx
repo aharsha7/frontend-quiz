@@ -14,7 +14,8 @@ const ManualQuestionForm = ({ onSubmit, onClose }) => {
 
   const handleQuestionChange = (index, key, value) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[index][key] = key === "correctOption" ? Number(value) : value;
+    updatedQuestions[index][key] =
+      key === "correctOption" ? Number(value) : value;
     setQuestions(updatedQuestions);
   };
 
@@ -25,7 +26,10 @@ const ManualQuestionForm = ({ onSubmit, onClose }) => {
   };
 
   const addQuestion = () => {
-    setQuestions([...questions, { text: "", options: ["", "", "", ""], correctOption: 0 }]);
+    setQuestions([
+      ...questions,
+      { text: "", options: ["", "", "", ""], correctOption: 0 },
+    ]);
   };
 
   const removeQuestion = (index) => {
@@ -89,17 +93,8 @@ const ManualQuestionForm = ({ onSubmit, onClose }) => {
   return (
     <div className="px-4">
       {showNotification && (
-        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="font-medium">Questions uploaded successfully!</span>
-          </div>
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg text-center font-medium">
+          Questions uploaded successfully!
         </div>
       )}
 
@@ -154,7 +149,9 @@ const ManualQuestionForm = ({ onSubmit, onClose }) => {
               type="text"
               placeholder="Enter question"
               value={q.text}
-              onChange={(e) => handleQuestionChange(qIndex, "text", e.target.value)}
+              onChange={(e) =>
+                handleQuestionChange(qIndex, "text", e.target.value)
+              }
               required
               className="w-full p-2 border rounded"
             />

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { Eye, EyeOff } from "lucide-react";
-import { ClipLoader } from "react-spinners";
+import { ClockLoader } from "react-spinners";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -126,10 +126,16 @@ const Register = () => {
             </div>
             <button
               type="submit"
-              className={`w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition duration-200 mb-2 flex justify-center items-center`}
+              className={"w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition duration-200 mb-2 flex justify-center items-center`"}
               disabled={loading}
             >
-              {loading ? <ClipLoader size={20} color="#ffffff" /> : "Register"}
+              {loading ? (
+                <>
+                <ClockLoader size={20} color="#ffffff" />
+                </>
+              ) : (
+                "Register"
+              )}
             </button>
 
             <div className="mt-4 text-center text-sm text-gray-600">

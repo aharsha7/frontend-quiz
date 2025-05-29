@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
 import { AuthContext } from "../context/AuthContext";
 import { Eye, EyeOff } from "lucide-react";
+import { SyncLoader } from "react-spinners";
 
 const Login = () => {
   const [email, setEmail] = useState("aharsha7na@gmail.com");
@@ -108,10 +109,17 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-xl font-semibold transition duration-200"
+              className="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-xl font-semibold transition duration-200 flex items-center justify-center gap-2"
               disabled={loading}
             >
-              {loading ? "Logging in..." : "Login"}
+              {loading ? (
+                <>
+                  <span>Logging in...</span>
+                  <SyncLoader color="#fff" size={5} speedMultiplier={0.5} />
+                </>
+              ) : (
+                "Login"
+              )}
             </button>
             <div className="mt-6 text-center text-sm text-gray-600">
               Don't have an account?{" "}

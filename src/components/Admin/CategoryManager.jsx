@@ -4,8 +4,11 @@ import Modal from "react-modal";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { useNavigate } from "react-router-dom";
+import { PulseLoader } from "react-spinners";
 
-const notyf = new Notyf();
+const notyf = new Notyf({
+  position: { x: "center", y: "top" },
+});
 Modal.setAppElement("#root");
 
 const CategoryManager = () => {
@@ -18,12 +21,12 @@ const CategoryManager = () => {
   const [questionsLoading, setQuestionsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch categories from API
+  // Fetch categories (array of strings)
   const fetchCategories = async () => {
     setLoading(true);
     try {
       const res = await api.get("/api/quiz/admin/categories");
-      setCategories(res.data);
+      setCategories(res.data || []);
     } catch (err) {
       notyf.error("Failed to load categories");
     } finally {
@@ -31,25 +34,21 @@ const CategoryManager = () => {
     }
   };
 
-  // Fetch questions for selected category
+  // Replace the fetchQuestions function in CategoryManager.jsx with this:
+
   const fetchQuestions = async (categoryName) => {
     setQuestionsLoading(true);
     try {
-      console.log("Fetching questions for category:", categoryName);
+      // Use the correct endpoint that matches your backend route
       const res = await api.get(
-        `/api/quiz/admin/questions?category=${encodeURIComponent(categoryName)}`
+        `/api/quiz/category/${encodeURIComponent(categoryName)}/questions`
       );
-      const data = res.data;
-
-      if (Array.isArray(data)) {
-        setViewQuestions({ category: categoryName, questions: data });
-      } else {
-        console.error("Expected an array, got:", data);
-        notyf.error("Unexpected data format for questions");
-        setViewQuestions({ category: categoryName, questions: [] });
-      }
+      setViewQuestions({ category: categoryName, questions: res.data });
     } catch (err) {
-      console.error("Failed to fetch questions", err);
+      console.error(
+        "Error fetching questions:",
+        err.response?.data || err.message
+      );
       notyf.error("Failed to load questions");
       setViewQuestions({ category: categoryName, questions: [] });
     } finally {
@@ -57,15 +56,16 @@ const CategoryManager = () => {
     }
   };
 
-  // Handle delete confirmation
-  const confirmDelete = (category) => {
-    setSelectedCategory(category);
+  const confirmDelete = (categoryName) => {
+    setSelectedCategory(categoryName);
     setDeleteModalOpen(true);
   };
 
   const handleDelete = async () => {
     try {
-      await api.delete(`/api/quiz/admin/category/${selectedCategory}`);
+      await api.delete(
+        `/api/quiz/admin/category/${encodeURIComponent(selectedCategory)}`
+      );
       setDeleteToast(true);
       fetchCategories();
       if (viewQuestions?.category === selectedCategory) {
@@ -85,29 +85,44 @@ const CategoryManager = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      {/* Back to Dashboard Button */}
       <button
         onClick={() => navigate("/admin/dashboard")}
-        className="mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-semibold shadow"
+        className="mb-6 mr-2 bg-gray-200 hover:bg-gray-300 rounded-full p-2 shadow flex items-center justify-center"
+        title="Back to Dashboard"
       >
-        ← Back to Dashboard
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="w-6 h-6 text-gray-700"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15.75 19.5L8.25 12l7.5-7.5"
+          />
+        </svg>
       </button>
 
-      {/* Toast */}
       {deleteToast && (
         <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg text-center font-semibold">
           Category deleted
         </div>
       )}
 
-      {/* Title */}
       <h2 className="text-2xl font-bold mb-6 text-gray-800">
         Manage Categories
       </h2>
 
-      {/* Category List */}
       {loading ? (
-        <p>Loading categories...</p>
+        <div className="flex flex-col items-center justify-center py-8">
+          <PulseLoader color="#6366f1" size={16} speedMultiplier={0.9} />
+          <span className="text-gray-500 font-medium mt-4">
+            Loading categories...
+          </span>
+        </div>
       ) : categories.length === 0 ? (
         <p className="text-gray-500">No categories found.</p>
       ) : (
@@ -139,7 +154,6 @@ const CategoryManager = () => {
         </ul>
       )}
 
-      {/* Questions Viewer */}
       {viewQuestions && (
         <div className="mt-8 bg-gray-100 p-6 rounded-lg shadow-inner">
           <div className="flex justify-between items-center mb-4">
@@ -183,7 +197,6 @@ const CategoryManager = () => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       <Modal
         isOpen={deleteModalOpen}
         onRequestClose={() => setDeleteModalOpen(false)}

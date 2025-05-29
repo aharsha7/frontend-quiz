@@ -5,6 +5,7 @@ import Navbar from './components/Common/Navbar';
 import SecureRoute from './components/Common/SecureRoute'; 
 import AdminDashboard from './pages/AdminDashboard';
 import UserDashboard from "./pages/UserDashboard";
+import QuizInstructionPage from "./pages/QuizInstructionPage";
 import QuizQuestions from './components/Quiz/QuizQuestions';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -38,6 +39,7 @@ function App() {
           <Route path="/quiz/dashboard" element={<SecureRoute requiredRole="user"><UserDashboard /></SecureRoute>} />
 
           {/*Any logged-in user */}
+          <Route path="/quiz/instructions/:categoryId" element={<SecureRoute><QuizInstructionPage /></SecureRoute>} />
           <Route path="/quiz/history" element={<SecureRoute><QuizHistory /></SecureRoute>} />
           <Route path="/quiz/:categoryId" element={<SecureRoute><QuizQuestions /></SecureRoute>} />
           <Route path="/result" element={<SecureRoute><QuizResult /></SecureRoute>} />

@@ -2,6 +2,7 @@ import axios from 'axios';
 
 // Centralized API configuration
 const API_BASE_URL = 'https://backend-quiz-1-rx4t.onrender.com';
+// const API_BASE_URL = 'http://localhost:5000'; // Use your local backend URL for development
 
 const api = axios.create({
   baseURL: API_BASE_URL,

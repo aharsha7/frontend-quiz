@@ -266,13 +266,13 @@ const QuizQuestions = () => {
                 <button
                   key={q._id}
                   onClick={() => setCurrentQ(index)}
-                  className={`w-12 h-12 text-white font-semibold rounded-lg shadow-md transition-all duration-200 transform hover:scale-110 ${
+                  className={`w-12 h-12 text-black font-semibold rounded-lg shadow-md transition-all duration-200 transform hover:scale-110 ${
                     isCurrent
                       ? "ring-4 ring-blue-300 ring-opacity-50 shadow-lg"
                       : ""
                   } ${
                     isAnswered
-                      ? "bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+                      ? "text-white bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
                       : "text-black bg-gradient-to-br from-slate-100 to-slate-200 hover:from-sky-300 hover:to-sky-700"
                   }`}
                 >

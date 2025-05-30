@@ -122,7 +122,7 @@ const QuizHistory = () => {
                     <div className="flex-1">
                       <div className="flex items-center space-x-4 mb-3">
                         <h3 className="text-lg font-semibold text-gray-800">
-                          {result.category?.name || "Unknown Category"}
+                          {result.category?.name || "Deleted Category"}
                         </h3>
 
                         <span

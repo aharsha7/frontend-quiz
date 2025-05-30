@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api"; // Adjust the import path as necessary
 import { BarLoader } from "react-spinners";
+import RecentResults from "../components/Quiz/RecentResults";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
@@ -41,10 +42,10 @@ const UserDashboard = () => {
   }, [navigate, token]);
 
   return (
-    <div className="min-h-screen  p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className=" p-8 mb-8">
+        <div className="p-8 mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="text-center md:text-left">
               <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-cyan-500 mb-2">
@@ -70,7 +71,7 @@ const UserDashboard = () => {
 
         {/* Loading State */}
         {loading ? (
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-12">
+          <div className="p-12">
             <div className="flex flex-col justify-center items-center">
               <span className="text-gray-600 font-medium text-lg">
                 Loading quiz categories...
@@ -97,9 +98,12 @@ const UserDashboard = () => {
         ) : (
           <>
             {/* Categories Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
               {categories.map((cat) => (
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 h-full group hover:border-blue-300 transition">
+                <div
+                  key={cat._id}
+                  className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 h-full group hover:border-blue-300 transition"
+                >
                   {/* Category Header */}
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-3">
@@ -149,6 +153,7 @@ const UserDashboard = () => {
                 </div>
               ))}
             </div>
+            <RecentResults />
           </>
         )}
       </div>

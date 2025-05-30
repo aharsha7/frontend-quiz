@@ -1,7 +1,7 @@
-// src/components/Quiz/QuizResult.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoChevronBack } from "react-icons/io5";
+import confetti from "canvas-confetti"; // ← ADD THIS
 
 const QuizResult = () => {
   const location = useLocation();
@@ -25,7 +25,6 @@ const QuizResult = () => {
     );
   }
 
-  // Determine answers to display
   let answersToShow = answers;
   let correctCount = 0;
 
@@ -54,6 +53,18 @@ const QuizResult = () => {
   }
 
   const scoreText = `${correctCount} / ${questions.length}`;
+  const scorePercentage = (correctCount / questions.length) * 100;
+
+  // 🎉 Fire confetti if score > 50%
+  useEffect(() => {
+    if (scorePercentage > 50) {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    }
+  }, [scorePercentage]);
 
 return (
   <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 py-8 px-4">

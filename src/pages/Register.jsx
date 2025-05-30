@@ -73,7 +73,7 @@ const Register = () => {
       <div className="w-full md:w-1/2 flex justify-center items-center bg-gray-100 min-h-[300px] mt-24 md:mt-0">
         <div className="bg-white p-6 md:p-12 rounded-2xl shadow-2xl border border-blue-200 flex flex-col items-center w-full max-w-lg min-w-0">
           <form onSubmit={handleRegister} className="w-full">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-800">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-800 underline">
               Register
             </h2>
             {error && (

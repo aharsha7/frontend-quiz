@@ -29,7 +29,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-teal-600 via-cyan-500 to-blue-900 text-white px-4 py-4 shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <nav className="bg-teal-600 text-white px-4 py-4 shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       {/* Left side: Quiz App */}
       <div className="flex flex-col items-center md:block w-full md:w-auto">
         <div
@@ -45,7 +45,7 @@ const Navbar = () => {
         {user && (
           <>
             <div className="flex items-center gap-2">
-              <User className="w-7 h-7 text-white bg-blue-700 p-1 rounded-full border border-blue-300" />
+              <User className="w-7 h-7 text-white bg-teal-700 p-1 rounded-full border border-cyan-300" />
               <span className="font-medium text-white break-words max-w-[150px] text-center md:text-left">
                 {user.name}
               </span>

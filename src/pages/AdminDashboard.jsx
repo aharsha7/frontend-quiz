@@ -53,13 +53,12 @@ const AdminDashboard = () => {
 
       {/* Grid for Action Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-
         <Link
           to="/admin/manage-categories"
-          className="block bg-white hover:bg-gray-50 rounded-xl p-6 shadow border text-center transition"
+          className="block bg-white hover:bg-blue-50 hover:scale-105 hover:shadow-xl rounded-xl p-6 shadow border text-center transition-all duration-200 ease-in-out transform"
         >
-          <FolderKanban className="w-10 h-10 mx-auto text-blue-600 mb-2" />
-          <h2 className="text-lg font-semibold text-gray-700">
+          <FolderKanban className="w-10 h-10 mx-auto text-blue-600 mb-2 transition-transform duration-200 group-hover:rotate-6" />
+          <h2 className="text-lg font-semibold text-gray-700 group-hover:text-blue-700 transition-colors">
             Manage Categories
           </h2>
           <p className="text-gray-500 text-sm">
@@ -68,10 +67,10 @@ const AdminDashboard = () => {
         </Link>
         <div
           onClick={() => openModal("upload")}
-          className="bg-white hover:bg-gray-50 cursor-pointer rounded-xl p-6 shadow border text-center transition"
+          className="bg-white hover:bg-green-50 hover:scale-105 hover:shadow-xl cursor-pointer rounded-xl p-6 shadow border text-center transition-all duration-200 ease-in-out transform"
         >
-          <FileUp className="w-10 h-10 mx-auto text-green-600 mb-2" />
-          <h2 className="text-lg font-semibold text-gray-700">
+          <FileUp className="w-10 h-10 mx-auto text-green-600 mb-2 transition-transform duration-200 group-hover:-rotate-6" />
+          <h2 className="text-lg font-semibold text-gray-700 group-hover:text-green-700 transition-colors">
             Upload Questions
           </h2>
           <p className="text-gray-500 text-sm">
@@ -80,10 +79,10 @@ const AdminDashboard = () => {
         </div>
         <div
           onClick={() => openModal("add")}
-          className="bg-white hover:bg-gray-50 cursor-pointer rounded-xl p-6 shadow border text-center transition"
+          className="bg-white hover:bg-purple-50 hover:scale-105 hover:shadow-xl cursor-pointer rounded-xl p-6 shadow border text-center transition-all duration-200 ease-in-out transform"
         >
-          <FilePlus className="w-10 h-10 mx-auto text-purple-600 mb-2" />
-          <h2 className="text-lg font-semibold text-gray-700">
+          <FilePlus className="w-10 h-10 mx-auto text-purple-600 mb-2 transition-transform duration-200 group-hover:rotate-6" />
+          <h2 className="text-lg font-semibold text-gray-700 group-hover:text-purple-700 transition-colors">
             Add Questions Manually
           </h2>
           <p className="text-gray-500 text-sm">

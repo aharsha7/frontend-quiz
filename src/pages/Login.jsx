@@ -6,8 +6,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { SyncLoader } from "react-spinners";
 
 const Login = () => {
-  const [email, setEmail] = useState("aharsha7na@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -51,7 +51,7 @@ const Login = () => {
       {/* Left Side */}
       <div className="w-full md:w-1/2 bg-white-100 text-white flex flex-col justify-center items-center p-10 min-h-[300px]">
         <img
-          src="login4.png"
+          src="logo8.png"
           alt="QuizApp Logo"
           className="mb-4 w-44 md:w-auto"
         />
@@ -67,7 +67,7 @@ const Login = () => {
       <div className="w-full md:w-1/2 flex justify-center items-center bg-gray-100 mt-4 min-h-[300px]">
         <div className="bg-white p-6 md:p-12 rounded-2xl shadow-2xl border border-blue-200 flex flex-col items-center w-full max-w-md min-w-0">
           <form onSubmit={handleSubmit} className="w-full">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-800">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-800 underline">
               Login
             </h2>
             {error && (

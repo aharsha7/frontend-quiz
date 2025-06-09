@@ -108,11 +108,11 @@ const UserDashboard = () => {
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-3">
                       <div className="w-12 h-12 bg-gradient-to-br from-sky-500 to-cyan-900 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg">
-                        {cat.name.charAt(0).toUpperCase()}
+                        {cat.name?.charAt(0).toUpperCase() || "?"}
                       </div>
                     </div>
                     <h3 className="text-xl font-bold text-gray-800 group-hover:text-sky-500 transition-colors duration-200">
-                      {cat.name}
+                      {cat.name || "Unnamed Category"}
                     </h3>
                   </div>
 

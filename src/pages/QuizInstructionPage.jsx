@@ -43,7 +43,7 @@ const QuizInstructionPage = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            {category.name} Quiz Instructions
+            Quiz Instructions
           </h1>
           <p className="text-lg text-gray-600">
             Please read the instructions carefully before starting

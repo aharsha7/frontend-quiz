@@ -83,10 +83,10 @@ const QuizInstructionPage = () => {
           </div>
 
           {/* Instructions Grid */}
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            {/* General Instructions */}
-            <div className="bg-blue-50 rounded-xl p-6">
-              <h3 className="text-xl font-semibold text-blue-800 mb-4 flex items-center">
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+        {/* General Instructions */}
+        <div class="bg-blue-50 rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-blue-800 mb-4 flex items-center">
                 <svg
                   className="h-6 w-6 mr-2"
                   fill="none"

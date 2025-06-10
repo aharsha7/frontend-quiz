@@ -83,111 +83,111 @@ const QuizInstructionPage = () => {
           </div>
 
           {/* Instructions Grid */}
-    <div class="grid md:grid-cols-2 gap-6 mb-8">
+    <div className="grid md:grid-cols-2 gap-6 mb-8">
         {/* General Instructions */}
-        <div class="bg-blue-50 rounded-xl p-6">
-            <h3 class="text-xl font-semibold text-blue-800 mb-4 flex items-center">
+        <div className="bg-blue-50 rounded-xl p-6">
+            <h3 className="text-xl font-semibold text-blue-800 mb-4 flex items-center">
                 <svg
-                  className="h-6 w-6 mr-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                    className="h-6 w-6 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
                 </svg>
                 General Instructions
-              </h3>
-              <ul className="space-y-3 text-gray-700">
+            </h3>
+            <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">
-                    1
-                  </span>
-                  <span>
-                    Read each question carefully before selecting your answer
-                  </span>
+                    <span className="bg-blue-500 text-white rounded-full min-w-6 w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5 flex-shrink-0">
+                        1
+                    </span>
+                    <span>
+                        Read each question carefully before selecting your answer
+                    </span>
                 </li>
                 <li className="flex items-start">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">
-                    2
-                  </span>
-                  <span>
-                    You can navigate between questions using Previous/Next
-                    buttons
-                  </span>
+                    <span className="bg-blue-500 text-white rounded-full min-w-6 w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5 flex-shrink-0">
+                        2
+                    </span>
+                    <span>
+                        You can navigate between questions using Previous/Next
+                        buttons
+                    </span>
                 </li>
                 <li className="flex items-start">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">
-                    3
-                  </span>
-                  <span>
-                    Use the question navigator to jump to any question quickly
-                  </span>
+                    <span className="bg-blue-500 text-white rounded-full min-w-6 w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5 flex-shrink-0">
+                        3
+                    </span>
+                    <span>
+                        Use the question navigator to jump to any question quickly
+                    </span>
                 </li>
                 <li className="flex items-start">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">
-                    4
-                  </span>
-                  <span>
-                    You can change your answers anytime before submitting
-                  </span>
+                    <span className="bg-blue-500 text-white rounded-full min-w-6 w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5 flex-shrink-0">
+                        4
+                    </span>
+                    <span>
+                        You can change your answers anytime before submitting
+                    </span>
                 </li>
-              </ul>
-            </div>
+            </ul>
+        </div>
 
-            {/* Submission Rules */}
-            <div className="bg-green-50 rounded-xl p-6">
-              <h3 className="text-xl font-semibold text-green-800 mb-4 flex items-center">
+        {/* Submission Rules */}
+        <div className="bg-green-50 rounded-xl p-6">
+            <h3 className="text-xl font-semibold text-green-800 mb-4 flex items-center">
                 <svg
-                  className="h-6 w-6 mr-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                    className="h-6 w-6 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                 </svg>
                 Submission Rules
-              </h3>
-              <ul className="space-y-3 text-gray-700">
+            </h3>
+            <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start">
-                  <span className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">
-                    1
-                  </span>
-                  <span>Submit the quiz manually when you're ready</span>
+                    <span className="bg-green-500 text-white rounded-full min-w-6 w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5 flex-shrink-0">
+                        1
+                    </span>
+                    <span>Submit the quiz manually when you're ready</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">
-                    2
-                  </span>
-                  <span>Auto-submission will occur when time runs out</span>
+                    <span className="bg-green-500 text-white rounded-full min-w-6 w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5 flex-shrink-0">
+                        2
+                    </span>
+                    <span>Auto-submission will occur when time runs out</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">
-                    3
-                  </span>
-                  <span>
-                    A warning will appear if you try to submit with unanswered
-                    questions
-                  </span>
+                    <span className="bg-green-500 text-white rounded-full min-w-6 w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5 flex-shrink-0">
+                        3
+                    </span>
+                    <span>
+                        A warning will appear if you try to submit with unanswered
+                        questions
+                    </span>
                 </li>
                 <li className="flex items-start">
-                  <span className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">
-                    4
-                  </span>
-                  <span>Once submitted, you cannot modify your answers</span>
+                    <span className="bg-green-500 text-white rounded-full min-w-6 w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5 flex-shrink-0">
+                        4
+                    </span>
+                    <span>Once submitted, you cannot modify your answers</span>
                 </li>
-              </ul>
-            </div>
-          </div>
+            </ul>
+        </div>
+    </div>
 
           {/* Agreement Checkbox */}
           <div className="border-2 border-gray-200 rounded-xl p-6 bg-gray-50">

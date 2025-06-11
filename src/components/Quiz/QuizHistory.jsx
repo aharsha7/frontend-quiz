@@ -1,7 +1,7 @@
 // src/components/Quiz/QuizHistory.jsx
 import React, { useEffect, useState } from "react";
 import { fetchQuizHistory } from "../../services/resultService";
-import { DotLoader } from "react-spinners"; // ✅ New spinner
+import { DotLoader } from "react-spinners"; 
 import { useNavigate } from "react-router-dom";
 
 const QuizHistory = () => {

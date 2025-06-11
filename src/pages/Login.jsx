@@ -75,6 +75,11 @@ const Login = () => {
                 {error}
               </div>
             )}
+            {loading && (
+              <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 px-4 py-3 rounded mb-4">
+                <p className="text-sm">Please wait a few seconds while we log you in...</p>
+              </div>
+            )}
             <div className="mb-4">
               <label className="block text-gray-700 mb-1">Email</label>
               <input

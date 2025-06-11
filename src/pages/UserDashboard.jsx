@@ -145,7 +145,7 @@ const UserDashboard = () => {
 
                   {/* Start Quiz Button with Link */}
                   <Link to={`/quiz/instructions/${cat._id}`} className="block">
-                    <button className="w-full bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-sky-600 hover:to-sky-700 hover:brightness-110 transition-all duration-300 text-white py-3 rounded-xl font-semibold shadow-md flex items-center justify-center gap-2">
+                    <button className="w-full bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 hover:brightness-110 transition-all duration-300 text-white py-3 rounded-xl font-semibold shadow-md flex items-center justify-center gap-2">
                       <span>🚀</span>
                       <span>Start Quiz</span>
                     </button>
